@@ -201,21 +201,22 @@ loading: {
 Откройте адрес, пройдите тест до конца. Скопируйте ссылку с результатом
 и откройте её в другом браузере — должен сразу открыться экран результатов.
 
-**Шаг 6. Почините превью ссылки. Не пропускайте этот шаг.**
-Откройте `index.html` прямо на GitHub (клик по файлу → значок карандаша).
-Найдите вверху пять строк с `USERNAME.github.io/REPO` и замените их на свой адрес:
+**Шаг 6. Адрес для превью ссылки.**
+В `index.html` он уже прописан:
 
 ```html
-<meta property="og:url"   content="https://ВАШ-ЛОГИН.github.io/rabochiy-pocherk/">
-<meta property="og:image" content="https://ВАШ-ЛОГИН.github.io/rabochiy-pocherk/preview.png">
-<meta name="twitter:image" content="https://ВАШ-ЛОГИН.github.io/rabochiy-pocherk/preview.png">
+<meta property="og:url"    content="https://viachkovdesign.github.io/quiz-landing/">
+<meta property="og:image"  content="https://viachkovdesign.github.io/quiz-landing/preview.png">
+<meta name="twitter:image" content="https://viachkovdesign.github.io/quiz-landing/preview.png">
 ```
 
-Нажмите **Commit changes**. Без этого шага ссылка в мессенджере развернётся без картинки:
-Telegram и остальные требуют полный адрес, относительный путь они не понимают.
+Трогать это нужно только если вы переименуете репозиторий или переедете на свой домен —
+тогда поправьте эти три строки. Адрес обязан быть полным: Telegram и другие мессенджеры
+относительный путь не понимают и покажут ссылку без картинки.
 
 **Шаг 7. Проверьте превью.**
-Просто отправьте ссылку себе в Telegram и посмотрите, как она развернётся. Если картинка не появилась — Telegram кеширует
+Отправьте ссылку себе в Telegram и посмотрите, как она развернётся. Если картинки нет —
+Telegram кеширует превью; отправьте ссылку боту `@WebpageBot`, он сбросит кеш. Если картинка не появилась — Telegram кеширует
 превью; отправьте ссылку боту `@WebpageBot`, он сбросит кеш.
 
 ### Как обновлять потом
