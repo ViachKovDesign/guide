@@ -645,17 +645,28 @@ const CONFIG = {
     }
   },
 
-  /* --- ссылка в кнопке на финальном экране ---------------------------- */
-  cta: {
-    href: '#',                              /* ЗАГЛУШКА: подставьте свою ссылку */
-    label: 'Открыть подборку практик',
-    placeholderNote: 'Ссылка пока не задана — впишите свою в CONFIG.cta.href'
+  /* --- СЧЁТЧИК ПОСЕЩЕНИЙ (Яндекс.Метрика) -----------------------------
+     ЕДИНСТВЕННОЕ, ЧТО НУЖНО ВПИСАТЬ РУКАМИ.
+
+     1. Зайдите на metrika.yandex.ru → «Добавить счётчик».
+     2. Имя — любое, адрес сайта — viachkovdesign.github.io/quiz-landing
+     3. Включите галочку «Вебвизор» (это записи экрана — видно, как люди
+        проходят тест и где закрывают вкладку).
+     4. После создания вверху будет номер счётчика — 8 цифр, например 98765432.
+     5. Впишите этот номер сюда, в кавычки. Всё.
+
+     Пока строка пустая — никакая аналитика не грузится и сайт работает
+     точно так же, просто без статистики.
+     -------------------------------------------------------------------- */
+  metrika: {
+    id: '',                 /* ← сюда номер счётчика, например: '98765432' */
+    webvisor: true          /* записи экрана; false — если не нужны */
   },
 
   /* --- общие строки ---------------------------------------------------- */
   brand: 'Рабочий почерк',
   disclaimer: 'Это развлекательно-рефлексивный тест, а не психологическая диагностика. Результат — повод подумать над своими привычками, а не диагноз и не медицинская рекомендация.',
-  privacy: 'Ответы никуда не отправляются: они хранятся только в вашем браузере. Ни почты, ни телефона, ни трекеров.',
+  privacy: 'Ваши ответы никуда не отправляются — они хранятся только в вашем браузере. Для общей статистики посещений используется Яндекс.Метрика: она считает визиты обезличенно и не видит, что именно вы ответили.',
 
   /* --- экран 1: интро --------------------------------------------------- */
   intro: {
@@ -678,14 +689,14 @@ const CONFIG = {
 
   /* --- экран 3: загрузка ------------------------------------------------ */
   loading: {
-    durationMs: 3500,
+    durationMs: 1600,        /* было 3500 — люди успевали заскучать */
     steps: [
       { at: 0.00, label: 'Считаю баллы…' },
       { at: 0.42, label: 'Собираю профиль…' },
       { at: 0.86, label: 'Готово' }
     ],
     stepCounter: 'Шаг {n} из {total}',
-    note: 'Ничего никуда не отправляется — считаем прямо здесь, в браузере.'
+    note: 'Ваши ответы никуда не отправляются — считаем прямо здесь, в браузере.'
   },
 
   /* --- экран 4: результаты ---------------------------------------------- */
@@ -1038,10 +1049,9 @@ const CONFIG = {
         <p class="lede" id="fin-lede"></p>
         <ol class="steps" id="finSteps"></ol>
         <div class="btn-row">
-          <a class="btn" id="btnCta" href="#"></a>
+          <button class="btn" type="button" id="btnBackToResults"></button>
           <button class="btn btn--quiet" type="button" id="btnRestart"></button>
         </div>
-        <p class="cta-note" id="ctaNote" translate="no" hidden></p>
       </section>
 
     </div>
@@ -1074,6 +1084,56 @@ const CONFIG = {
   const $  = id => document.getElementById(id);
   const reduced = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- счётчик посещений -------------------------------------------
+     Метрика подключается только если в CONFIG.metrika.id вписан номер.
+     Пустой номер = скрипт не грузится вообще, сайт работает как раньше.
+
+     Что попадёт в отчёт «Цели» в Метрике:
+       quiz_start    — человек нажал «Начать тест»
+       quiz_q5       — дошёл до 5-го вопроса   (не бросил на первых)
+       quiz_q10      — дошёл до 10-го
+       quiz_q15      — дошёл до 15-го
+       quiz_complete — ответил на все 21 и увидел результат
+       quiz_share    — скопировал ссылку на свой результат
+       quiz_restart  — прошёл заново
+       quiz_shared_open — открыл чужой результат по ссылке (это ваш вирусный трафик)
+     ------------------------------------------------------------------------ */
+
+  const MID = (CONFIG.metrika && String(CONFIG.metrika.id || '').trim()) || '';
+
+  function initMetrika() {
+    if (!MID) return;
+    (function (m, e, t, r, i, k, a) {
+      m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
+      m[i].l = 1 * new Date();
+      for (let j = 0; j < e.scripts.length; j++) {
+        if (e.scripts[j].src === r) return;
+      }
+      k = e.createElement(t); a = e.getElementsByTagName(t)[0];
+      k.async = 1; k.src = r; a.parentNode.insertBefore(k, a);
+    })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+
+    window.ym(MID, 'init', {
+      ssr: true,
+      webvisor: !!(CONFIG.metrika && CONFIG.metrika.webvisor),
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      defer: false
+    });
+  }
+
+  /* Одна цель — один раз за визит, чтобы воронка не врала. */
+  const firedGoals = {};
+  function track(goal, once) {
+    if (once !== false) {
+      if (firedGoals[goal]) return;
+      firedGoals[goal] = true;
+    }
+    if (!MID || typeof window.ym !== 'function') return;
+    try { window.ym(MID, 'reachGoal', goal); } catch (e) {}
+  }
 
   /* ---------- состояние -------------------------------------------------- */
 
@@ -1238,7 +1298,9 @@ const CONFIG = {
       $(id).hidden = false;
       state.screen = id;
       if (after) after();
-      window.scrollTo(0, 0);
+      // мгновенно, без плавной прокрутки: иначе новый экран «доезжает» с задержкой
+      try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }
+      catch (e) { window.scrollTo(0, 0); }
       focusHeading(id);
       announce(SCREEN_TITLES[id] ? SCREEN_TITLES[id]() : '');
     }, function () {
@@ -1368,6 +1430,9 @@ const CONFIG = {
     state.busy = true;
     state.index = idx;
     save();
+    if (idx === 4)  track('quiz_q5');
+    if (idx === 9)  track('quiz_q10');
+    if (idx === 14) track('quiz_q15');
     renderProgress();
     swap($('quizBody'), dir, function () {
       renderQuestion();
@@ -1546,13 +1611,19 @@ const CONFIG = {
 
   function showResults() {
     const rows = score(state.answers);
-    if (!state.shared) writeHash(state.answers);
+    if (!state.shared) { writeHash(state.answers); track('quiz_complete'); }
     showScreen('s-results', 1, function () { renderResults(rows); });
   }
 
   /* ---------- поделиться --------------------------------------------------- */
 
   function shareLink() {
+    track('quiz_share');
+    // Если хеша по какой-то причине нет — дособираем ссылку сами,
+    // иначе человек скопирует пустой адрес без своего результата.
+    if (!state.shared && !/^#r=/.test(window.location.hash || '')) {
+      if (state.answers.every(v => v !== null)) writeHash(state.answers);
+    }
     const url = window.location.href;
     const input = $('shareUrl');
     const btn = $('btnShare');
@@ -1594,20 +1665,9 @@ const CONFIG = {
       ol.append(li);
     });
 
-    const cta = $('btnCta');
-    cta.textContent = CONFIG.cta.label;
-    cta.href = CONFIG.cta.href || '#';
-    const isPlaceholder = !CONFIG.cta.href || CONFIG.cta.href === '#';
-    $('ctaNote').hidden = !isPlaceholder;
-    $('ctaNote').textContent = CONFIG.cta.placeholderNote;
-    // пока ссылка — заглушка, честно сообщаем об этом и вспомогательным технологиям
-    if (isPlaceholder) {
-      cta.setAttribute('aria-disabled', 'true');
-      cta.setAttribute('aria-describedby', 'ctaNote');
-    } else {
-      cta.removeAttribute('aria-disabled');
-      cta.removeAttribute('aria-describedby');
-    }
+    // На финале всегда есть путь назад — иначе экран становится тупиком:
+    // «Пройти заново» стирает ответы, а вернуться к своим шкалам было нечем.
+    $('btnBackToResults').textContent = CONFIG.final.backToResults;
 
     $('btnRestart').textContent = CONFIG.final.restart;
     $('btnRestart').classList.remove('is-armed');
@@ -1653,6 +1713,7 @@ const CONFIG = {
 
   function restart() {
     stopLoading();
+    track('quiz_restart');
     clearStore();
     state.answers = new Array(TOTAL).fill(null);
     state.index = 0;
@@ -1681,6 +1742,7 @@ const CONFIG = {
   /* ---------- запуск --------------------------------------------------------- */
 
   function boot() {
+    initMetrika();
     renderIntro();
     renderFinal();
 
@@ -1690,6 +1752,7 @@ const CONFIG = {
         clearStore();
         state.answers = new Array(TOTAL).fill(null);
       }
+      track('quiz_start');
       startQuiz(0);
     });
     $('btnResume').addEventListener('click', function () {
@@ -1702,19 +1765,29 @@ const CONFIG = {
       if (state.shared) { leaveSharedResult(); return; }
       showScreen('s-final', 1, renderFinal);
     });
-    $('btnCta').addEventListener('click', function (e) {
-      if (!CONFIG.cta.href || CONFIG.cta.href === '#') e.preventDefault();
+    $('btnBackToResults').addEventListener('click', function () {
+      showScreen('s-results', -1, function () { renderResults(score(state.answers)); });
     });
 
-    // 1. Результат по ссылке — показываем сразу, локальный прогресс не трогаем.
+    // 1. Результат в адресе страницы.
+    //    Важно отличить СВОЙ результат от чужого: после прохождения теста
+    //    в адрес дописывается #r=…, и при обновлении страницы человек
+    //    раньше видел «результат, которым с вами поделились» — свой же.
     const shared = readHash();
     if (shared) {
-      state.shared = true;
+      const saved = load();
+      const isOwn = !!saved &&
+        Array.isArray(saved.answers) &&
+        saved.answers.every(function (v, i) { return v === shared[i]; });
+
+      state.shared = !isOwn;
       state.answers = shared;
+      if (isOwn) state.index = TOTAL;
       $('s-results').hidden = false;
       state.screen = 's-results';
       renderResults(score(shared));
-      announce(CONFIG.results.sharedTitle);
+      announce(isOwn ? CONFIG.results.title : CONFIG.results.sharedTitle);
+      if (!isOwn) track('quiz_shared_open');
       return;
     }
 
@@ -1753,8 +1826,12 @@ const CONFIG = {
   window.addEventListener('hashchange', function () {
     const shared = readHash();
     if (!shared) return;
-    if (state.shared && state.screen === 's-results') return;
-    state.shared = true;
+    if (state.screen === 's-results') return;   // уже смотрим результат — не дёргаем экран
+    const saved = load();
+    const isOwn = !!saved && Array.isArray(saved.answers) &&
+      saved.answers.every(function (v, i) { return v === shared[i]; });
+    state.shared = !isOwn;
+    if (!isOwn) track('quiz_shared_open');
     state.answers = shared;
     stopLoading();
     showScreen('s-results', 1, function () { renderResults(score(shared)); });
