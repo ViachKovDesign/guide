@@ -8,7 +8,7 @@
 
 ```
 index.html    вся страница: разметка, стили, логика и весь текст
-preview.png   картинка 1200×630 для превью ссылки в мессенджерах
+preview.webp  картинка 1200×630 для превью ссылки в мессенджерах
 README.md     этот файл
 ```
 
@@ -185,8 +185,16 @@ loading: {
 
 **Шаг 2. Загрузите файлы.**
 На странице пустого репозитория нажмите **uploading an existing file**.
-Перетащите `index.html`, `preview.png` и `README.md`.
+Перетащите `index.html`, `preview.webp` и `README.md`.
 Внизу нажмите **Commit changes**.
+
+> **Проверьте имена файлов перед загрузкой.** Браузер любит переименовывать
+> скачанное: если в Загрузках уже лежал `index.html`, новый сохранится как
+> `index (2).html`. GitHub Pages ищет файл ровно с именем `index.html` — при любом
+> другом имени корень сайта отдаст 404, хотя в настройках Pages будет написано,
+> что сайт live (это про сборку, а не про наличие страницы).
+> Картинку скачивайте кнопкой загрузки, а не «Сохранить изображение как…» —
+> во втором случае браузер может пересжать её в другой формат.
 
 **Шаг 3. Включите Pages.**
 В репозитории откройте **Settings** (шестерёнка сверху) → в левом меню **Pages**.
@@ -206,8 +214,8 @@ loading: {
 
 ```html
 <meta property="og:url"    content="https://viachkovdesign.github.io/quiz-landing/">
-<meta property="og:image"  content="https://viachkovdesign.github.io/quiz-landing/preview.png">
-<meta name="twitter:image" content="https://viachkovdesign.github.io/quiz-landing/preview.png">
+<meta property="og:image"  content="https://viachkovdesign.github.io/quiz-landing/preview.webp">
+<meta name="twitter:image" content="https://viachkovdesign.github.io/quiz-landing/preview.webp">
 ```
 
 Трогать это нужно только если вы переименуете репозиторий или переедете на свой домен —
