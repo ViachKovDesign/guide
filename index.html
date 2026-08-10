@@ -530,6 +530,28 @@ h1:focus, h2:focus{ outline:none }   /* программный фокус на �
 }
 
 .share{ margin-top:var(--s12); padding-top:var(--s6); border-top:1px solid var(--line) }
+.share__panel{ margin-top:var(--s4) }
+.share__nets{
+  display:flex; flex-wrap:wrap; gap:var(--s2);
+  margin-block:var(--s3);
+}
+.net{
+  display:inline-flex; align-items:center;
+  min-height:44px;
+  padding:var(--s2) var(--s4);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius);
+  background:var(--surface);
+  color:var(--ink);
+  text-decoration:none;
+  font-size:.9375rem;
+  font-weight:500;
+  transition:background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+@media (hover:hover) and (pointer:fine){
+  .net:hover{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink) }
+}
+
 .share__url{
   width:100%;
   margin-top:var(--s3);
@@ -715,11 +737,39 @@ const CONFIG = {
     lede: 'Семь шкал, от самой выраженной к самой слабой. Высокий процент не значит «хорошо»: у каждой шкалы свой смысл, он в тексте рядом.',
     sharedTitle: 'Результат, которым с вами поделились',
     sharedLede: 'Это чужие ответы, открытые по ссылке. Хотите свои — пройдите тест сами, это пять минут.',
-    shareBtn: 'Скопировать ссылку на результат',
-    shareDone: 'Ссылка скопирована',
-    shareFallback: 'Скопируйте ссылку вручную:',
     next: 'Что дальше',
     ownRun: 'Пройти тест самому'
+  },
+
+  /* --- кнопка «Поделиться» -----------------------------------------------
+     На телефоне открывается системное окно «Поделиться» со всеми
+     установленными приложениями. Там, где его нет (Firefox на компьютере,
+     открытый файл без сайта), показывается ряд ссылок на сети.
+
+     Сети — обычные ссылки, без их скриптов и кнопок-виджетов: чужой JS
+     потянул бы за собой куки и трекеры. Лишние сети можно просто удалить
+     из списка networks, порядок тоже ваш.
+
+     В шаблонах: {url} — ссылка на результат, {text} — строка с процентами.
+     Подставляются уже закодированными, трогать кодирование не нужно.
+     ------------------------------------------------------------------------ */
+  share: {
+    btn: 'Поделиться результатом',
+    panelTitle: 'Куда отправить',
+    close: 'Свернуть',
+    copy: 'Скопировать ссылку',
+    copied: 'Ссылка скопирована',
+    manual: 'Скопируйте ссылку вручную:',
+
+    /* {top} — три самые выраженные шкалы с процентами */
+    text: 'Мой рабочий почерк: {top}. А ваш?',
+    topCount: 3,
+
+    networks: [
+      { id: 'telegram', label: 'Telegram', href: 'https://t.me/share/url?url={url}&text={text}' },
+      { id: 'whatsapp', label: 'WhatsApp', href: 'https://api.whatsapp.com/send?text={text}%20{url}' },
+      { id: 'vk',       label: 'ВКонтакте', href: 'https://vk.com/share.php?url={url}&title={text}' }
+    ]
   },
 
   /* --- экран 5: финал ---------------------------------------------------- */
@@ -1045,11 +1095,19 @@ const CONFIG = {
         <div class="share">
           <div class="btn-row">
             <button class="btn" type="button" id="btnNext"></button>
-            <button class="btn btn--ghost" type="button" id="btnShare"></button>
+            <button class="btn btn--ghost" type="button" id="btnShare"
+                    aria-expanded="false" aria-controls="sharePanel"></button>
           </div>
-          <label class="sr-only" for="shareUrl">Ссылка на результат</label>
-          <input class="share__url" id="shareUrl" type="text" readonly hidden
-                 spellcheck="false" autocomplete="off">
+
+          <!-- запасной вариант: показывается там, где нет системного окна -->
+          <div class="share__panel" id="sharePanel" hidden>
+            <p class="eyebrow" id="sharePanelTitle"></p>
+            <ul class="share__nets" id="shareNets"></ul>
+            <button class="btn btn--quiet" type="button" id="btnCopyLink"></button>
+            <label class="sr-only" for="shareUrl">Ссылка на результат</label>
+            <input class="share__url" id="shareUrl" type="text" readonly hidden
+                   spellcheck="false" autocomplete="off">
+          </div>
         </div>
       </section>
 
@@ -1583,7 +1641,15 @@ const CONFIG = {
     $('res-disclaimer').textContent = CONFIG.disclaimer;
     $('btnNext').textContent = state.shared
       ? CONFIG.results.ownRun : CONFIG.results.next;
-    $('btnShare').textContent = CONFIG.results.shareBtn;
+    // Чужой результат делить нечего: это не ваши ответы, и текст сообщения
+    // «Мой рабочий почерк…» был бы неправдой.
+    $('btnShare').hidden = state.shared;
+    $('btnShare').textContent = CONFIG.share.btn;
+    $('btnShare').setAttribute('aria-expanded', 'false');
+    $('sharePanelTitle').textContent = CONFIG.share.panelTitle;
+    $('btnCopyLink').textContent = CONFIG.share.copy;
+    $('sharePanel').hidden = true;
+    $('shareUrl').hidden = true;
 
     const ul = $('resScales');
     ul.textContent = '';
@@ -1644,32 +1710,107 @@ const CONFIG = {
 
   /* ---------- поделиться --------------------------------------------------- */
 
-  function shareLink() {
-    track('quiz_share');
-    // Если хеша по какой-то причине нет — дособираем ссылку сами,
-    // иначе человек скопирует пустой адрес без своего результата.
+  /* Ссылка на свой результат. Хеша может ещё не быть, если человек нажал
+     раньше, чем он записался в адрес, — тогда дособираем его сами. */
+  function shareUrl() {
     if (!state.shared && !/^#r=/.test(window.location.hash || '')) {
       if (state.answers.every(v => v !== null)) writeHash(state.answers);
     }
-    const url = window.location.href;
-    const input = $('shareUrl');
-    const btn = $('btnShare');
+    return window.location.href;
+  }
 
-    function fallback() {
+  /* Строка с самыми выраженными шкалами. Уходит в текст сообщения: карточка
+     ссылки в мессенджере общая для всех, а цифры видно сразу. */
+  function shareText() {
+    const n = Math.max(1, CONFIG.share.topCount | 0);
+    const top = score(state.answers).slice(0, n)
+      .map(function (r) {
+        return r.scale.name.toLocaleLowerCase('ru') + ' ' + r.pct + '%';
+      })
+      .join(', ');
+    return CONFIG.share.text.replace(/\{top\}/g, top);
+  }
+
+  function buildNets() {
+    const url = shareUrl();
+    const text = shareText();
+    const ul = $('shareNets');
+    ul.textContent = '';
+    (CONFIG.share.networks || []).forEach(function (net) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.className = 'net';
+      a.textContent = net.label;
+      a.href = String(net.href)
+        .replace(/\{url\}/g, encodeURIComponent(url))
+        .replace(/\{text\}/g, encodeURIComponent(text));
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.addEventListener('click', function () {
+        track('quiz_share');
+        track('share_' + net.id);
+      });
+      li.append(a);
+      ul.append(li);
+    });
+  }
+
+  function toggleSharePanel(force) {
+    const panel = $('sharePanel');
+    const btn = $('btnShare');
+    const open = typeof force === 'boolean' ? force : panel.hidden;
+    if (open) buildNets();
+    panel.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    btn.textContent = open ? CONFIG.share.close : CONFIG.share.btn;
+    if (open) {
+      const first = panel.querySelector('.net') || $('btnCopyLink');
+      if (first) first.focus();
+    }
+  }
+
+  /* Системное окно «Поделиться» там, где оно есть: на телефоне это список
+     всех установленных приложений. Где нет — раскрываем ряд ссылок. */
+  function shareLink() {
+    if (navigator.share) {
+      const data = { title: CONFIG.brand, text: shareText(), url: shareUrl() };
+      try {
+        navigator.share(data).then(function () {
+          track('quiz_share');
+          track('share_native');
+        }).catch(function (e) {
+          // отмена — это не сбой, молчим
+          if (e && (e.name === 'AbortError' || e.name === 'NotAllowedError')) return;
+          toggleSharePanel(true);
+        });
+        return;
+      } catch (e) { /* старые реализации кидают синхронно */ }
+    }
+    toggleSharePanel();
+  }
+
+  function copyLink() {
+    const url = shareUrl();
+    const input = $('shareUrl');
+    const btn = $('btnCopyLink');
+    track('quiz_share');
+    track('share_copy');
+
+    function manual() {
       input.hidden = false;
       input.value = url;
       input.select();
-      $('live').textContent = CONFIG.results.shareFallback;
+      announce(CONFIG.share.manual);
     }
 
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(url).then(function () {
-        btn.textContent = CONFIG.results.shareDone;
-        announce(CONFIG.results.shareDone);
-        setTimeout(function () { btn.textContent = CONFIG.results.shareBtn; }, 2200);
-      }).catch(fallback);
+        btn.textContent = CONFIG.share.copied;
+        announce(CONFIG.share.copied);
+        setTimeout(function () { btn.textContent = CONFIG.share.copy; }, 2200);
+      }).catch(manual);
     } else {
-      fallback();
+      manual();
     }
   }
 
@@ -1788,6 +1929,7 @@ const CONFIG = {
     $('btnBack').addEventListener('click', back);
     $('btnRestart').addEventListener('click', onRestartClick);
     $('btnShare').addEventListener('click', shareLink);
+    $('btnCopyLink').addEventListener('click', copyLink);
     $('btnNext').addEventListener('click', function () {
       if (state.shared) { leaveSharedResult(); return; }
       showScreen('s-final', 1, renderFinal);
