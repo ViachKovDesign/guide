@@ -1,0 +1,1765 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Рабочий почерк — тест на привычки в работе</title>
+<meta name="description" content="21 вопрос о том, как вы начинаете, тянете, отдаёте и заканчиваете работу. В конце — семь шкал вашего рабочего почерка. Пять минут, без регистрации.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#EFE9DE" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17150F" media="(prefers-color-scheme: dark)">
+
+<!-- Open Graph / Twitter.
+     ВАЖНО: замените https://USERNAME.github.io/REPO/ на свой адрес после деплоя
+     (см. README, раздел «Деплой на GitHub Pages», шаг 6). -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Рабочий почерк">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:url" content="https://USERNAME.github.io/REPO/">
+<meta property="og:title" content="Рабочий почерк — тест на привычки в работе">
+<meta property="og:description" content="21 вопрос о том, как вы начинаете, тянете, отдаёте и заканчиваете работу. В конце — семь шкал вашего рабочего почерка.">
+<meta property="og:image" content="https://USERNAME.github.io/REPO/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Название теста «Рабочий почерк» и семь измерительных шкал">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Рабочий почерк — тест на привычки в работе">
+<meta name="twitter:description" content="21 вопрос о том, как вы начинаете, тянете, отдаёте и заканчиваете работу. В конце — семь шкал вашего рабочего почерка.">
+<meta name="twitter:image" content="https://USERNAME.github.io/REPO/preview.png">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E5A4F'/%3E%3Cg fill='%23EFE9DE'%3E%3Crect x='6' y='14.5' width='20' height='3' rx='1.5'/%3E%3Crect x='6' y='8' width='13' height='2' rx='1' opacity='.55'/%3E%3Crect x='6' y='22' width='17' height='2' rx='1' opacity='.55'/%3E%3C/g%3E%3C/svg%3E">
+
+<style>
+/* =========================================================================
+   РАБОЧИЙ ПОЧЕРК — стили
+   Палитра ниже продублирована в CONFIG.theme (единственное место, которое
+   нужно править, чтобы поменять цвета). Здесь она лежит как запасная —
+   на случай, если JS не выполнился.
+   ========================================================================= */
+
+:root{
+  /* цвета (перезаписываются из CONFIG.theme при загрузке) */
+  --paper:#EFE9DE;
+  --surface:#F8F5F0;
+  --surface-2:#E7E0D2;
+  --ink:#221F1A;
+  --muted:#57503F;
+  --line:#D6CDBC;
+  --line-strong:#8E8574;
+  --accent:#2E5A4F;
+  --accent-ink:#F8F5F0;
+  --accent-dim:#24473E;
+
+  /* шкала отступов: 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px;
+  --s6:24px; --s8:32px; --s12:48px; --s16:64px;
+
+  /* сетка: 720 = 6 колонок × 100px + 5 гаттеров × 24px */
+  --col:100px;
+  --gutter:24px;
+  --measure:720px;
+
+  /* типографика */
+  --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+
+  /* движение */
+  --enter: cubic-bezier(.22, 1, .36, 1);
+  --move:  cubic-bezier(.25, 1, .5, 1);
+  --t-exit: 150ms;
+  --t-enter: 220ms;
+
+  --radius:14px;
+  --radius-sm:8px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#17150F;
+    --surface:#211E17;
+    --surface-2:#2B271E;
+    --ink:#F0EADF;
+    --muted:#B0A797;
+    --line:#3A342A;
+    --line-strong:#6F685B;
+    --accent:#83C3AC;
+    --accent-ink:#12211C;
+    --accent-dim:#A2D5C2;
+  }
+}
+
+*, *::before, *::after{ box-sizing:border-box }
+[hidden]{ display:none !important }
+
+html{
+  -webkit-text-size-adjust:100%;
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:1rem;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  padding-left:env(safe-area-inset-left);
+  padding-right:env(safe-area-inset-right);
+  overflow-x:hidden;
+}
+
+h1,h2,h3{ margin:0; font-family:var(--serif); font-weight:600; text-wrap:balance }
+p{ margin:0 }
+ul,ol{ margin:0; padding:0; list-style:none }
+
+/* ---------- контейнер / сетка ------------------------------------------ */
+
+.wrap{
+  width:100%;
+  /* 720px контента + поля по 32 = 784 */
+  max-width:calc(var(--measure) + var(--s8) * 2);
+  margin-inline:auto;
+  padding-inline:var(--s8);
+}
+@media (max-width:479px){
+  .wrap{ padding-inline:20px }   /* мобильный margin по сетке: 20px */
+}
+
+.site-head{
+  padding-block:var(--s6) var(--s4);
+  flex:0 0 auto;
+}
+.site-foot{
+  padding-block:var(--s8) var(--s12);
+  margin-top:auto;
+  flex:0 0 auto;
+}
+main{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  padding-block:var(--s4) var(--s8);
+  scroll-margin-top:var(--s6);
+}
+#stage{ width:100% }
+
+/* ---------- утилиты ----------------------------------------------------- */
+
+.sr-only{
+  position:absolute; width:1px; height:1px;
+  padding:0; margin:-1px; overflow:hidden;
+  clip-path:inset(50%); white-space:nowrap; border:0;
+}
+
+.skip{
+  position:absolute; left:var(--s4); top:var(--s4);
+  transform:translateY(-200%);
+  z-index:20;
+  background:var(--accent); color:var(--accent-ink);
+  padding:var(--s3) var(--s4);
+  border-radius:var(--radius-sm);
+  font-size:.9375rem; text-decoration:none;
+}
+.skip:focus{ transform:translateY(0) }
+
+.eyebrow{
+  font-family:var(--mono);
+  font-size:.75rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.wordmark{
+  font-family:var(--mono);
+  font-size:.75rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  display:inline-flex; align-items:center; gap:var(--s2);
+}
+.wordmark::before{
+  content:""; width:18px; height:2px; background:var(--accent); border-radius:1px;
+}
+
+/* ---------- фокус ------------------------------------------------------- */
+
+:where(a, button, [tabindex]):focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+  border-radius:var(--radius-sm);
+}
+h1:focus, h2:focus{ outline:none }   /* программный фокус на заголовке экрана */
+
+/* ---------- кнопки ------------------------------------------------------ */
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:var(--s2);
+  min-height:52px;
+  padding:var(--s3) var(--s8);
+  border:1px solid transparent;
+  border-radius:var(--radius);
+  font:inherit;
+  font-weight:600;
+  font-size:1.0625rem;
+  text-decoration:none;
+  cursor:pointer;
+  background:var(--accent);
+  color:var(--accent-ink);
+  transition:background-color 180ms ease, transform 120ms var(--enter), border-color 180ms ease, color 180ms ease;
+}
+.btn:active{ transform:scale(.985) }
+
+.btn--ghost{
+  background:transparent;
+  color:var(--ink);
+  border-color:var(--line-strong);
+}
+.btn--quiet{
+  background:transparent;
+  color:var(--muted);
+  border-color:transparent;
+  min-height:44px;
+  padding-inline:var(--s3);
+  font-weight:500;
+  font-size:.9375rem;
+}
+
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{ background:var(--accent-dim) }
+  .btn--ghost:hover{ background:var(--surface); border-color:var(--muted) }
+  .btn--quiet:hover{ color:var(--ink); background:var(--surface) }
+}
+
+/* «Пройти заново» после первого клика ждёт подтверждения */
+.btn--quiet.is-armed{
+  color:var(--ink);
+  background:var(--surface);
+  border-color:var(--line-strong);
+}
+/* ссылка-заглушка не притворяется рабочей */
+.btn[aria-disabled="true"]{ cursor:default }
+
+.btn-row{ display:flex; flex-wrap:wrap; gap:var(--s3); align-items:center }
+
+/* ---------- переходы между экранами и вопросами -------------------------
+   Порядок правил важен: .x-in-* должны идти ПОСЛЕ [data-anim],
+   чтобы transition:none в стартовом кадре побеждал.
+   ----------------------------------------------------------------------- */
+
+[data-anim]{ will-change:opacity, transform }
+[data-anim="exit"]{
+  transition:opacity var(--t-exit) ease, transform var(--t-exit) var(--move);
+}
+[data-anim="enter"]{
+  transition:opacity var(--t-enter) ease, transform var(--t-enter) var(--enter);
+}
+.x-out-f, .x-out-b{ opacity:0 }
+.x-out-f{ transform:translate3d(-8px,0,0) }
+.x-out-b{ transform:translate3d(8px,0,0) }
+.x-in-f, .x-in-b{ opacity:0; transition:none }
+.x-in-f{ transform:translate3d(8px,0,0) }
+.x-in-b{ transform:translate3d(-8px,0,0) }
+
+/* ---------- экран: интро ------------------------------------------------ */
+
+.intro{ padding-block:var(--s8) 0 }
+.intro h1{
+  font-size:clamp(2.25rem, 9vw, 3.5rem);
+  line-height:1.04;
+  letter-spacing:-.02em;
+  margin-block:var(--s4) var(--s6);
+}
+.lede{
+  font-size:clamp(1.0625rem, 3.4vw, 1.1875rem);
+  color:var(--muted);
+  max-width:34em;
+}
+.factline{
+  display:flex; align-items:center; gap:var(--s3);
+  margin-block:var(--s8) var(--s6);
+  font-family:var(--mono);
+  font-size:.8125rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.factline::after{
+  content:""; flex:1 1 auto; height:1px; background:var(--line);
+}
+
+.scalelist{
+  margin-top:var(--s4);
+  border-top:1px solid var(--line);
+}
+.scalelist li{
+  display:flex; align-items:baseline; gap:var(--s4);
+  padding-block:var(--s3);
+  border-bottom:1px solid var(--line);
+  font-size:.9375rem;
+}
+.scalelist .n{
+  font-family:var(--mono);
+  font-size:.75rem;
+  color:var(--accent);
+  font-variant-numeric:tabular-nums;
+  min-width:1.75em;
+}
+
+/* ---------- экран: квиз ------------------------------------------------- */
+
+.quiz-top{ margin-bottom:var(--s8) }
+.quiz-meta{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:var(--s4);
+  margin-bottom:var(--s3);
+}
+
+/* линейка прогресса: 21 засечка — по одной на вопрос */
+.ruler{
+  position:relative;
+  height:10px;
+  border-radius:5px;
+  background:var(--surface-2);
+  overflow:hidden;
+}
+.ruler__fill{
+  position:absolute; inset:0;
+  background:var(--accent);
+  transform-origin:left center;
+  transform:scaleX(0);
+  transition:transform 320ms var(--move);
+}
+.ruler__ticks{
+  position:absolute; inset:0;
+  background-image:repeating-linear-gradient(
+    90deg,
+    var(--paper) 0 1px,
+    transparent 1px calc(100% / 21)
+  );
+  background-position:-1px 0;
+}
+
+.q{
+  font-size:clamp(1.5rem, 5.6vw, 2.125rem);
+  line-height:1.2;
+  letter-spacing:-.015em;
+  margin-bottom:var(--s6);
+}
+
+.opts{ display:flex; flex-direction:column; gap:var(--s3) }
+
+.opt{
+  display:flex; align-items:flex-start; gap:var(--s4);
+  width:100%;
+  min-height:56px;
+  padding:var(--s4);
+  text-align:left;
+  font:inherit;
+  font-size:1.0625rem;
+  line-height:1.45;
+  color:var(--ink);
+  background:var(--surface);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:background-color 160ms ease, border-color 160ms ease, transform 160ms var(--enter), color 160ms ease;
+}
+.opt .k{
+  flex:0 0 auto;
+  width:26px; height:26px;
+  margin-top:.1em;
+  display:grid; place-items:center;
+  border-radius:7px;
+  background:var(--surface-2);
+  color:var(--muted);
+  font-family:var(--mono);
+  font-size:.75rem;
+  font-variant-numeric:tabular-nums;
+  transition:background-color 160ms ease, color 160ms ease;
+}
+.opt .t{ flex:1 1 auto; min-width:0; overflow-wrap:anywhere }
+
+@media (hover:hover) and (pointer:fine){
+  .opt:hover{ border-color:var(--accent); background:var(--surface-2); transform:translateX(2px) }
+  .opt:hover .k{ background:var(--accent); color:var(--accent-ink) }
+}
+.opt:active{ transform:scale(.995) }
+.opt.is-picked{
+  border-color:var(--accent);
+  background:var(--accent);
+  color:var(--accent-ink);
+}
+.opt.is-picked .k{ background:var(--accent-ink); color:var(--accent) }
+
+.hint{
+  margin-top:var(--s4);
+  font-size:.8125rem;
+  color:var(--muted);
+}
+.quiz-nav{ margin-top:var(--s6) }
+
+/* ---------- экран: загрузка -------------------------------------------- */
+
+.loading{
+  min-height:52dvh;
+  display:flex; flex-direction:column; justify-content:center;
+  gap:var(--s6);
+}
+.loadhead{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:var(--s4);
+  margin-bottom:var(--s3);
+}
+.loading h1{
+  font-size:clamp(1.75rem, 6vw, 2.5rem);
+  line-height:1.1;
+  letter-spacing:-.02em;
+  min-height:1.1em;
+}
+/* смена подписи: старая уходит вверх, новая приходит снизу */
+#loadLabel{
+  display:inline-block;
+  transition:opacity 130ms ease, transform 130ms var(--enter);
+}
+#loadLabel.is-out{ opacity:0; transform:translate3d(0,-6px,0) }
+#loadLabel.is-in{ opacity:0; transform:translate3d(0,6px,0); transition:none }
+
+.loadbar{
+  position:relative;
+  height:4px;
+  border-radius:2px;
+  background:var(--surface-2);
+  overflow:hidden;
+}
+.loadbar__fill{
+  position:absolute; inset:0;
+  background:var(--accent);
+  transform-origin:left center;
+  transform:scaleX(0);
+}
+#loadNote{ margin-top:var(--s3) }
+
+/* ---------- экран: результаты ------------------------------------------ */
+
+.results h1, .final h1{
+  font-size:clamp(1.875rem, 7vw, 2.75rem);
+  line-height:1.08;
+  letter-spacing:-.02em;
+  margin-bottom:var(--s4);
+}
+.results .lede{ margin-bottom:var(--s8) }
+
+.legend{
+  display:flex; justify-content:space-between;
+  font-family:var(--mono); font-size:.6875rem;
+  letter-spacing:.06em;
+  color:var(--muted);
+  font-variant-numeric:tabular-nums;
+  padding-bottom:var(--s2);
+  border-bottom:1px solid var(--line);
+  margin-bottom:var(--s6);
+}
+
+.scales{ display:flex; flex-direction:column; gap:var(--s8) }
+.scale__head{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:var(--s4);
+  margin-bottom:var(--s3);
+}
+.scale__name{ font-size:1.125rem; line-height:1.25 }
+.scale__pct{
+  font-family:var(--mono);
+  font-size:1.125rem;
+  font-variant-numeric:tabular-nums;
+  color:var(--accent);
+  flex:0 0 auto;
+}
+
+.gauge{
+  position:relative;
+  height:12px;
+  border-radius:6px;
+  background:var(--surface-2);
+  overflow:hidden;
+}
+.gauge__fill{
+  position:absolute; inset:0;
+  background:var(--accent);
+  transform-origin:left center;
+  transform:scaleX(0);
+  transition:transform 640ms var(--move);
+}
+.gauge__ticks{
+  position:absolute; inset:0;
+  background-image:repeating-linear-gradient(
+    90deg,
+    var(--paper) 0 1px,
+    transparent 1px 25%
+  );
+  background-position:-1px 0;
+}
+
+.scale__band{
+  margin-top:var(--s3);
+  font-size:.9375rem;
+  color:var(--muted);
+  max-width:40em;
+}
+.scale__band b{
+  display:block;
+  font-weight:600;
+  font-family:var(--mono);
+  font-size:.6875rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink);
+  margin-bottom:var(--s1);
+}
+
+.share{ margin-top:var(--s12); padding-top:var(--s6); border-top:1px solid var(--line) }
+.share__url{
+  width:100%;
+  margin-top:var(--s3);
+  padding:var(--s3);
+  font-family:var(--mono); font-size:.8125rem;
+  color:var(--ink);
+  background:var(--surface);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-sm);
+}
+
+.notice{
+  margin-top:var(--s6);
+  padding:var(--s4);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:3px solid var(--accent);
+  border-radius:var(--radius-sm);
+  font-size:.875rem;
+  color:var(--muted);
+}
+
+/* ---------- экран: финал ----------------------------------------------- */
+
+.final{ padding-block:var(--s6) 0 }
+.steps{ margin-block:var(--s8); border-top:1px solid var(--line) }
+.steps li{
+  display:flex; gap:var(--s4);
+  padding-block:var(--s4);
+  border-bottom:1px solid var(--line);
+}
+.steps .n{
+  flex:0 0 auto;
+  font-family:var(--mono); font-size:.75rem;
+  color:var(--accent);
+  font-variant-numeric:tabular-nums;
+  padding-top:.28em;
+  min-width:1.75em;
+}
+.steps p{ font-size:1rem; max-width:36em }
+
+.cta-note{
+  margin-top:var(--s3);
+  font-size:.8125rem;
+  color:var(--muted);
+  font-family:var(--mono);
+}
+
+/* ---------- подвал ------------------------------------------------------ */
+
+.site-foot .disclaimer{
+  padding-top:var(--s4);
+  border-top:1px solid var(--line);
+  font-size:.8125rem;
+  color:var(--muted);
+  max-width:44em;
+}
+
+/* ---------- планшет и шире ---------------------------------------------- */
+
+@media (min-width:768px){
+  .intro{ padding-block:var(--s12) 0 }
+  .opt{ padding:var(--s4) var(--s6) }
+  .scales{ gap:var(--s12) }
+}
+
+/* ---------- уважение к prefers-reduced-motion --------------------------- */
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto }
+  *, *::before, *::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    transition-delay:0ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+</style>
+
+<script>
+/* =========================================================================
+   CONFIG — здесь лежит ВЕСЬ контент и цвета.
+   Чтобы поменять тему теста, правьте только этот объект (см. README).
+   ========================================================================= */
+const CONFIG = {
+
+  /* --- цвета ---------------------------------------------------------- */
+  theme: {
+    light: {
+      paper:      '#EFE9DE',   /* фон страницы */
+      surface:    '#F8F5F0',   /* карточки, поля */
+      'surface-2':'#E7E0D2',   /* дорожки шкал, вторичные плашки */
+      ink:        '#221F1A',   /* основной текст */
+      muted:      '#57503F',   /* вторичный текст */
+      line:       '#D6CDBC',   /* декоративные линии-разделители */
+      'line-strong':'#8E8574', /* рамки кликабельных элементов (контраст ≥3:1) */
+      accent:     '#2E5A4F',   /* акцент: кнопки, заполнение шкал */
+      'accent-ink':'#F8F5F0',  /* текст на акценте */
+      'accent-dim':'#24473E'   /* акцент при наведении — темнее, контраст растёт */
+    },
+    dark: {
+      paper:      '#17150F',
+      surface:    '#211E17',
+      'surface-2':'#2B271E',
+      ink:        '#F0EADF',
+      muted:      '#B0A797',
+      line:       '#3A342A',
+      'line-strong':'#6F685B',
+      accent:     '#83C3AC',
+      'accent-ink':'#12211C',
+      'accent-dim':'#A2D5C2'
+    }
+  },
+
+  /* --- ссылка в кнопке на финальном экране ---------------------------- */
+  cta: {
+    href: '#',                              /* ЗАГЛУШКА: подставьте свою ссылку */
+    label: 'Открыть подборку практик',
+    placeholderNote: 'Ссылка пока не задана — впишите свою в CONFIG.cta.href'
+  },
+
+  /* --- общие строки ---------------------------------------------------- */
+  brand: 'Рабочий почерк',
+  disclaimer: 'Это развлекательно-рефлексивный тест, а не психологическая диагностика. Результат — повод подумать над своими привычками, а не диагноз и не медицинская рекомендация.',
+  privacy: 'Ответы никуда не отправляются: они хранятся только в вашем браузере. Ни почты, ни телефона, ни трекеров.',
+
+  /* --- экран 1: интро --------------------------------------------------- */
+  intro: {
+    eyebrow: 'Тест о привычках в работе',
+    title: 'Как вы работаете на самом деле',
+    lede: 'Двадцать один вопрос о том, как вы начинаете, тянете, отдаёте и заканчиваете работу. В конце — семь шкал вашего рабочего почерка и по одному тексту к каждой.',
+    facts: '21 вопрос · 5 минут',
+    start: 'Начать тест',
+    resume: 'Продолжить',
+    listTitle: 'Что измеряем'
+  },
+
+  /* --- экран 2: квиз ---------------------------------------------------- */
+  quiz: {
+    counter: 'Вопрос {n} из {total}',
+    back: 'Назад',
+    hint: 'Можно отвечать клавишами 1–4, возвращаться — стрелкой влево.',
+    progressLabel: 'Прогресс теста'
+  },
+
+  /* --- экран 3: загрузка ------------------------------------------------ */
+  loading: {
+    durationMs: 3500,
+    steps: [
+      { at: 0.00, label: 'Считаю баллы…' },
+      { at: 0.42, label: 'Собираю профиль…' },
+      { at: 0.86, label: 'Готово' }
+    ],
+    stepCounter: 'Шаг {n} из {total}',
+    note: 'Ничего никуда не отправляется — считаем прямо здесь, в браузере.'
+  },
+
+  /* --- экран 4: результаты ---------------------------------------------- */
+  results: {
+    title: 'Ваш рабочий почерк',
+    lede: 'Семь шкал, от самой выраженной к самой слабой. Высокий процент не значит «хорошо»: у каждой шкалы свой смысл, он в тексте рядом.',
+    sharedTitle: 'Результат, которым с вами поделились',
+    sharedLede: 'Это чужие ответы, открытые по ссылке. Хотите свои — пройдите тест сами, это пять минут.',
+    shareBtn: 'Скопировать ссылку на результат',
+    shareDone: 'Ссылка скопирована',
+    shareFallback: 'Скопируйте ссылку вручную:',
+    next: 'Что дальше',
+    ownRun: 'Пройти тест самому'
+  },
+
+  /* --- экран 5: финал ---------------------------------------------------- */
+  final: {
+    title: 'Что дальше',
+    lede: 'Семь шкал сразу не двигаются. Возьмите одну и одну неделю.',
+    steps: [
+      'Выберите одну шкалу — самую верхнюю или самую нижнюю. Не семь, одну.',
+      'Придумайте под неё одно действие, которое помещается в обычный рабочий день: не «начать планировать», а «в 9:40 выписать три задачи».',
+      'Через неделю пройдите тест ещё раз и сравните проценты по этой шкале.'
+    ],
+    restart: 'Пройти заново',
+    restartConfirm: 'Нажмите ещё раз — ответы сотрутся',
+    backToResults: 'Вернуться к результатам'
+  },
+
+  /* --- шкалы ------------------------------------------------------------
+     bands: from — нижняя граница диапазона в процентах.
+     Порядок в массиве не важен, шкалы сортируются по проценту.
+     ---------------------------------------------------------------------- */
+  scales: [
+    {
+      id: 'delay',
+      name: 'Откладывание',
+      bands: [
+        { from: 67, title: 'Высокое', text: 'Сложные задачи регулярно уезжают к концу срока, а перед ними появляется слой мелких дел. Работа при этом делается — просто обходится дороже по нервам, чем могла бы.' },
+        { from: 34, title: 'Среднее', text: 'Вы откладываете выборочно: что-то делаете сразу, что-то тянете. Обычно это одна-две повторяющиеся категории задач, и их стоит назвать по именам.' },
+        { from: 0,  title: 'Низкое',  text: 'Вы беретесь за неприятное рано и не копите хвосты. Обратная сторона — иногда работа начинается раньше, чем задача успела проясниться.' }
+      ]
+    },
+    {
+      id: 'perfect',
+      name: 'Перфекционизм',
+      bands: [
+        { from: 67, title: 'Высокий', text: 'Вы доводите работу заметно дальше точки, где она уже решает задачу. Это даёт качество, но забирает время, которое больше неоткуда взять.' },
+        { from: 34, title: 'Средний', text: 'Вы чувствуете разницу между „достаточно“ и „хорошо“ и чаще всего останавливаетесь вовремя. Срывы в доводку случаются на задачах, которые важны вам лично.' },
+        { from: 0,  title: 'Низкий',  text: 'Вы спокойно отдаёте работу на уровне „решает задачу“. Стоит проверить, что этот уровень совпадает с ожиданиями тех, кто работу принимает.' }
+      ]
+    },
+    {
+      id: 'switch',
+      name: 'Переключение между задачами',
+      bands: [
+        { from: 67, title: 'Высокое', text: 'Вы держите в работе много линий сразу и часто прерываетесь. Дни получаются насыщенными, но крупное продвигается медленнее, чем кажется по нагрузке.' },
+        { from: 34, title: 'Среднее', text: 'Вы переключаетесь, но обычно понимаете, какая задача главная. Проседает это в дни, когда входящих больше обычного.' },
+        { from: 0,  title: 'Низкое',  text: 'Вы работаете линейно и держите фокус на одном. Риск — поздно реагировать на то, что действительно требует переключения.' }
+      ]
+    },
+    {
+      id: 'bounds',
+      name: 'Границы работы',
+      bands: [
+        { from: 67, title: 'Крепкие', text: 'Рабочее время у вас заканчивается, и окружающие это знают. Такая граница экономит силы и почти всегда переносится коллегами спокойнее, чем ожидается.' },
+        { from: 34, title: 'Подвижные', text: 'Границы есть, но плавающие: в спокойные недели держатся, в горячие исчезают. Полезно заранее решить, где проходит край даже в горячую неделю.' },
+        { from: 0,  title: 'Размытые', text: 'Работа занимает столько места, сколько ей дают, а дают почти всё. Начинать стоит с одного жёсткого правила, а не с полной перестройки расписания.' }
+      ]
+    },
+    {
+      id: 'plan',
+      name: 'Планирование',
+      bands: [
+        { from: 67, title: 'Высокое', text: 'Вы приходите в день с готовым планом и запасом времени. Следите, чтобы сам план не превращался в отдельную работу.' },
+        { from: 34, title: 'Среднее', text: 'План у вас есть, но живёт он примерно до середины дня. Обычно помогает не более подробный план, а меньшее число пунктов в нём.' },
+        { from: 0,  title: 'Низкое',  text: 'Вы работаете по ситуации и начинаете с того, что попалось первым. Это гибко, но крупные задачи в таком режиме почти не двигаются.' }
+      ]
+    },
+    {
+      id: 'delegate',
+      name: 'Делегирование',
+      bands: [
+        { from: 67, title: 'Свободное', text: 'Вы отдаёте задачи и не тянетесь их переделать. Убедитесь, что вместе с задачей уходит и достаточный контекст.' },
+        { from: 34, title: 'С контролем', text: 'Вы отдаёте, но остаётесь рядом и проверяете чаще, чем нужно. Договорённость о двух точках проверки обычно снимает половину этого.' },
+        { from: 0,  title: 'Редкое', text: 'Почти всё вы делаете сами: так предсказуемее, и объяснять не надо. Цена — потолок по объёму, который упирается в ваши часы.' }
+      ]
+    },
+    {
+      id: 'recover',
+      name: 'Восстановление',
+      bands: [
+        { from: 67, title: 'Устойчивое', text: 'Вы умеете закрывать день и возвращаться отдохнувшим. Это то, на чём держится всё остальное в этом списке.' },
+        { from: 34, title: 'Неровное', text: 'Восстановление есть, но нерегулярное: хорошие недели чередуются с провалами. Работает не длинный отдых потом, а короткие паузы сейчас.' },
+        { from: 0,  title: 'Слабое', text: 'Пауз почти нет, и вечер уходит на догон. В таком режиме сначала падает качество решений, а усталость замечается последней.' }
+      ]
+    }
+  ],
+
+  /* --- вопросы ----------------------------------------------------------
+     scale — id шкалы выше. w — вес варианта: 0, 1, 2 или 3.
+     Ровно 3 вопроса на шкалу; максимум по шкале = 9 баллов.
+     ---------------------------------------------------------------------- */
+  questions: [
+    { scale:'delay', text:'Задача важная, но неприятная. Обычно вы…', options:[
+      { t:'Берётесь за неё первой, пока день не разогнался', w:0 },
+      { t:'Ставите на конкретное время и держите его', w:1 },
+      { t:'Переносите пару раз, потом делаете', w:2 },
+      { t:'Тянете до срока и делаете в последний момент', w:3 }
+    ]},
+    { scale:'perfect', text:'Работа сделана на 90%. Оставшиеся 10% — это…', options:[
+      { t:'Ничего: 90% уже решают задачу, отдаю', w:0 },
+      { t:'Час на проверку — и отдаю', w:1 },
+      { t:'Ещё день доводки, хотя разницу заметит не каждый', w:2 },
+      { t:'Могу переделать целиком, если что-то цепляет', w:3 }
+    ]},
+    { scale:'switch', text:'Сколько задач у вас в работе одновременно в обычный день?', options:[
+      { t:'Одна, следующая — только после неё', w:0 },
+      { t:'Две, и я знаю, какая главная', w:1 },
+      { t:'Четыре-пять, все понемногу', w:2 },
+      { t:'Не считал: сколько прилетело, столько и есть', w:3 }
+    ]},
+    { scale:'bounds', text:'Рабочий чат вечером — это…', options:[
+      { t:'Открыт в любое время, так спокойнее', w:0 },
+      { t:'Загляну перед сном одним глазком', w:1 },
+      { t:'Смотрю, только если предупредили заранее', w:2 },
+      { t:'После рабочего дня не открываю', w:3 }
+    ]},
+    { scale:'plan', text:'С чего начинается ваше рабочее утро?', options:[
+      { t:'С того, что первым попалось на глаза', w:0 },
+      { t:'С беглого взгляда на список дел', w:1 },
+      { t:'С разбора списка и выбора главного', w:2 },
+      { t:'С плана, который собран ещё вчера', w:3 }
+    ]},
+    { scale:'delegate', text:'Задачу может сделать другой человек, но чуть иначе, чем вы. Вы…', options:[
+      { t:'Сделаете сами, так надёжнее', w:0 },
+      { t:'Отдадите, но будете проверять каждый шаг', w:1 },
+      { t:'Отдадите и договоритесь о точках проверки', w:2 },
+      { t:'Отдадите вместе с правом решать по ходу', w:3 }
+    ]},
+    { scale:'recover', text:'Перерывы в течение рабочего дня…', options:[
+      { t:'Их почти нет', w:0 },
+      { t:'Кофе, не вставая из-за стола', w:1 },
+      { t:'Пара пауз, встаю и хожу', w:2 },
+      { t:'Паузы по расписанию, и я их не пропускаю', w:3 }
+    ]},
+    { scale:'delay', text:'Что чаще всего оказывается сделано вместо сложной задачи?', options:[
+      { t:'Ничего: сложная и была первой', w:0 },
+      { t:'Мелочи, но по делу и недолго', w:1 },
+      { t:'Разбор почты, чатов и вкладок', w:2 },
+      { t:'Уборка стола, ещё кофе, ещё раз лента', w:3 }
+    ]},
+    { scale:'perfect', text:'Как вы показываете черновик?', options:[
+      { t:'Рано и охотно — так быстрее', w:0 },
+      { t:'Когда собран костяк', w:1 },
+      { t:'Только когда почти чисто', w:2 },
+      { t:'Почти никогда: показываю готовое', w:3 }
+    ]},
+    { scale:'switch', text:'Сообщение приходит в середине сосредоточенной работы. Вы…', options:[
+      { t:'Увидите его, когда закончите блок', w:0 },
+      { t:'Посмотрите на паузе между задачами', w:1 },
+      { t:'Откроете почти сразу', w:2 },
+      { t:'Ответите не отрываясь — и потеряете нить', w:3 }
+    ]},
+    { scale:'bounds', text:'Просят взять ещё одну задачу, когда план уже полный. Вы…', options:[
+      { t:'Соглашаетесь и надеетесь, что успеете', w:0 },
+      { t:'Берёте, но предупреждаете, что будет позже', w:1 },
+      { t:'Спрашиваете, что тогда сдвинуть', w:2 },
+      { t:'Отказываетесь и объясняете, чем заняты', w:3 }
+    ]},
+    { scale:'plan', text:'Крупная задача на месяц. Ваш первый шаг…', options:[
+      { t:'Начать и разобраться по ходу', w:0 },
+      { t:'Прикинуть основные этапы в голове', w:1 },
+      { t:'Разложить на шаги с датами', w:2 },
+      { t:'Разложить на шаги, заложить запас и отметить риски', w:3 }
+    ]},
+    { scale:'delegate', text:'Просить о помощи для вас — это…', options:[
+      { t:'Крайняя мера', w:0 },
+      { t:'Неловко, но иногда приходится', w:1 },
+      { t:'Нормальный рабочий ход', w:2 },
+      { t:'Первое, что вы делаете, когда упёрлись', w:3 }
+    ]},
+    { scale:'recover', text:'Вечер после тяжёлого дня выглядит так…', options:[
+      { t:'Догоняю то, что не успел', w:0 },
+      { t:'Отдыхаю, но мысли всё ещё о работе', w:1 },
+      { t:'Переключаюсь за час-полтора', w:2 },
+      { t:'Закрываю день и переключаюсь сразу', w:3 }
+    ]},
+    { scale:'delay', text:'Насколько точно вы называете срок самому себе?', options:[
+      { t:'Обычно заканчиваю раньше, чем сказал', w:0 },
+      { t:'Попадаю в срок, который назвал', w:1 },
+      { t:'Сдвигаю на день-два', w:2 },
+      { t:'Срок сам по себе, работа сама по себе', w:3 }
+    ]},
+    { scale:'perfect', text:'Коллега поправил у вас мелочь. Что дальше?', options:[
+      { t:'Принимаю и иду дальше', w:0 },
+      { t:'Уточняю, если не согласен, и закрываю тему', w:1 },
+      { t:'Долго обдумываю формулировку ответа', w:2 },
+      { t:'Возвращаюсь к этому мысленно ещё вечером', w:3 }
+    ]},
+    { scale:'switch', text:'Сколько вкладок и окон открыто у вас прямо сейчас?', options:[
+      { t:'Ровно те, что нужны для текущей задачи', w:0 },
+      { t:'Несколько, но я в них ориентируюсь', w:1 },
+      { t:'Много, часть — ещё со вчера', w:2 },
+      { t:'Сбился со счёта и боюсь закрывать', w:3 }
+    ]},
+    { scale:'bounds', text:'Отпуск и выходные у вас проходят так…', options:[
+      { t:'Работа доезжает со мной', w:0 },
+      { t:'Проверяю почту раз в день, на всякий случай', w:1 },
+      { t:'Только срочное и только по звонку', w:2 },
+      { t:'Не работаю, и коллеги об этом знают', w:3 }
+    ]},
+    { scale:'plan', text:'Насколько ваш план переживает обычный день?', options:[
+      { t:'План есть, но день идёт сам по себе', w:0 },
+      { t:'Сбивается почти всегда', w:1 },
+      { t:'Держится примерно наполовину', w:2 },
+      { t:'Держится, потому что в нём заложен запас', w:3 }
+    ]},
+    { scale:'delegate', text:'Чужая работа вышла не такой, как вы себе представляли. Вы…', options:[
+      { t:'Молча переделываете', w:0 },
+      { t:'Переделываете и упоминаете об этом вскользь', w:1 },
+      { t:'Объясняете, что поправить, и ждёте версию', w:2 },
+      { t:'Разбираете вместе, чтобы в следующий раз сошлось', w:3 }
+    ]},
+    { scale:'recover', text:'Сон в рабочую неделю…', options:[
+      { t:'Сплю мало и знаю об этом', w:0 },
+      { t:'По-разному, чаще не высыпаюсь', w:1 },
+      { t:'Обычно высыпаюсь', w:2 },
+      { t:'Стабильный режим, встаю отдохнувшим', w:3 }
+    ]}
+  ]
+};
+
+/* Палитра применяется до первой отрисовки — тёмная тема не мигает. */
+(function applyTheme(){
+  const decl = o => Object.entries(o).map(([k,v]) => `--${k}:${v}`).join(';');
+  const css = `:root{${decl(CONFIG.theme.light)}}
+@media (prefers-color-scheme: dark){:root{${decl(CONFIG.theme.dark)}}}`;
+  const el = document.createElement('style');
+  el.id = 'theme-vars';
+  el.textContent = css;
+  document.head.appendChild(el);
+})();
+</script>
+</head>
+
+<body>
+
+<a class="skip" href="#main">Перейти к содержанию</a>
+
+<header class="site-head">
+  <div class="wrap">
+    <p class="wordmark" id="wordmark">Рабочий почерк</p>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+
+    <p class="sr-only" id="live" role="status" aria-live="polite"></p>
+
+    <noscript>
+      <p style="padding:16px;border:1px solid currentColor;border-radius:8px">
+        Тест работает на JavaScript. Включите его в браузере — и страница откроется целиком.
+      </p>
+    </noscript>
+
+    <div id="stage">
+
+      <!-- ЭКРАН 1 · ИНТРО -->
+      <section class="screen intro" id="s-intro" aria-labelledby="intro-title" hidden>
+        <p class="eyebrow" id="intro-eyebrow"></p>
+        <h1 id="intro-title" tabindex="-1"></h1>
+        <p class="lede" id="intro-lede"></p>
+        <p class="factline" id="intro-facts"></p>
+        <div class="btn-row">
+          <button class="btn" type="button" id="btnStart"></button>
+          <button class="btn btn--quiet" type="button" id="btnResume" hidden></button>
+        </div>
+        <div class="scalelist-wrap">
+          <p class="eyebrow" id="intro-list-title" style="margin-top:var(--s12)"></p>
+          <ul class="scalelist" id="introScales"></ul>
+        </div>
+      </section>
+
+      <!-- ЭКРАН 2 · КВИЗ -->
+      <section class="screen quiz" id="s-quiz" aria-labelledby="q-title" hidden>
+        <div class="quiz-top">
+          <div class="quiz-meta">
+            <p class="eyebrow" id="qCounter"></p>
+            <p class="eyebrow" id="qPct"></p>
+          </div>
+          <div class="ruler" id="ruler" role="progressbar" aria-valuemin="0" aria-valuemax="21" aria-valuenow="0">
+            <div class="ruler__fill" id="rulerFill"></div>
+            <div class="ruler__ticks"></div>
+          </div>
+        </div>
+
+        <div id="quizBody">
+          <h1 class="q" id="q-title" tabindex="-1"></h1>
+          <ul class="opts" id="qOpts"></ul>
+          <p class="hint" id="qHint"></p>
+        </div>
+
+        <div class="quiz-nav">
+          <button class="btn btn--quiet" type="button" id="btnBack"></button>
+        </div>
+      </section>
+
+      <!-- ЭКРАН 3 · ЗАГРУЗКА -->
+      <section class="screen loading" id="s-loading" aria-labelledby="load-title" hidden>
+        <div>
+          <div class="loadhead">
+            <p class="eyebrow" id="loadStep"></p>
+            <p class="eyebrow" id="loadPct">0%</p>
+          </div>
+          <h1 id="load-title" tabindex="-1"><span id="loadLabel"></span></h1>
+        </div>
+        <div>
+          <div class="loadbar" role="progressbar" id="loadBar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="loadbar__fill" id="loadFill"></div>
+          </div>
+          <p class="hint" id="loadNote"></p>
+        </div>
+      </section>
+
+      <!-- ЭКРАН 4 · РЕЗУЛЬТАТЫ -->
+      <section class="screen results" id="s-results" aria-labelledby="res-title" hidden>
+        <h1 id="res-title" tabindex="-1"></h1>
+        <p class="lede" id="res-lede"></p>
+        <div class="legend" aria-hidden="true">
+          <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+        </div>
+        <ul class="scales" id="resScales"></ul>
+        <p class="notice" id="res-disclaimer"></p>
+        <div class="share">
+          <div class="btn-row">
+            <button class="btn" type="button" id="btnNext"></button>
+            <button class="btn btn--ghost" type="button" id="btnShare"></button>
+          </div>
+          <label class="sr-only" for="shareUrl">Ссылка на результат</label>
+          <input class="share__url" id="shareUrl" type="text" readonly hidden
+                 spellcheck="false" autocomplete="off">
+        </div>
+      </section>
+
+      <!-- ЭКРАН 5 · ФИНАЛ -->
+      <section class="screen final" id="s-final" aria-labelledby="fin-title" hidden>
+        <h1 id="fin-title" tabindex="-1"></h1>
+        <p class="lede" id="fin-lede"></p>
+        <ol class="steps" id="finSteps"></ol>
+        <div class="btn-row">
+          <a class="btn" id="btnCta" href="#"></a>
+          <button class="btn btn--quiet" type="button" id="btnRestart"></button>
+        </div>
+        <p class="cta-note" id="ctaNote" translate="no" hidden></p>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <p class="disclaimer" id="footDisclaimer"></p>
+    <p class="disclaimer" id="footPrivacy" style="border-top:0;padding-top:var(--s2)"></p>
+  </div>
+</footer>
+
+<script>
+/* =========================================================================
+   ЛОГИКА. Ниже правится только при смене поведения — контент лежит в CONFIG.
+   ========================================================================= */
+(function () {
+  'use strict';
+
+  const Q          = CONFIG.questions;
+  const TOTAL      = Q.length;
+  const PER_SCALE  = TOTAL / CONFIG.scales.length;      // 3 вопроса на шкалу
+  const MAX_SCORE  = PER_SCALE * 3;                     // максимум по шкале = 9
+  const STORE_KEY  = 'rabochiy-pocherk.v1';
+  const HASH_VER   = '1';
+  const T_EXIT     = 150;
+  const T_ENTER    = 220;
+
+  const $  = id => document.getElementById(id);
+  const reduced = () =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- состояние -------------------------------------------------- */
+
+  const state = {
+    answers: new Array(TOTAL).fill(null),
+    index: 0,
+    screen: 's-intro',
+    shared: false,          // результат открыт по чужой ссылке
+    busy: false
+  };
+
+  /* ---------- сохранение ------------------------------------------------- */
+
+  function save() {
+    if (state.shared) return;
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        v: 1, answers: state.answers, index: state.index
+      }));
+    } catch (e) { /* приватный режим — просто не сохраняем */ }
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return null;
+      const d = JSON.parse(raw);
+      if (!d || d.v !== 1 || !Array.isArray(d.answers) || d.answers.length !== TOTAL) return null;
+      const ok = d.answers.every(v => v === null || (Number.isInteger(v) && v >= 0 && v <= 3));
+      if (!ok) return null;
+      return d;
+    } catch (e) { return null; }
+  }
+
+  function clearStore() {
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+  }
+
+  /* ---------- кодирование результата в хеш -------------------------------
+     21 ответ по 4 значения = 42 бита. Пакуем в base36 — выходит ~9 символов.
+     ----------------------------------------------------------------------- */
+
+  function encode(answers) {
+    let n = 0n;
+    for (const v of answers) n = n * 4n + BigInt(v);
+    return HASH_VER + '-' + n.toString(36);
+  }
+
+  function decode(str) {
+    if (typeof str !== 'string') return null;
+    const m = /^(\d+)-([0-9a-z]{1,16})$/.exec(str);
+    if (!m || m[1] !== HASH_VER) return null;
+    let n = 0n;
+    for (const ch of m[2]) {
+      const d = parseInt(ch, 36);
+      if (Number.isNaN(d)) return null;
+      n = n * 36n + BigInt(d);
+    }
+    const out = new Array(TOTAL);
+    for (let i = TOTAL - 1; i >= 0; i--) { out[i] = Number(n % 4n); n /= 4n; }
+    return n === 0n ? out : null;     // лишние биты → ссылка битая
+  }
+
+  function readHash() {
+    const m = /^#r=(.+)$/.exec(window.location.hash || '');
+    return m ? decode(decodeURIComponent(m[1])) : null;
+  }
+
+  function writeHash(answers) {
+    const h = '#r=' + encode(answers);
+    try { history.replaceState(null, '', h); }
+    catch (e) { window.location.hash = h; }
+  }
+
+  /* ---------- подсчёт ----------------------------------------------------- */
+
+  /* Первый вопрос без ответа — это и есть «место, где остановились». */
+  function firstUnanswered() {
+    const i = state.answers.findIndex(v => v === null);
+    return i === -1 ? TOTAL - 1 : i;
+  }
+
+  function bandFor(scale, pct) {
+    const sorted = scale.bands.slice().sort((a, b) => b.from - a.from);
+    return sorted.find(b => pct >= b.from) || sorted[sorted.length - 1];
+  }
+
+  function score(answers) {
+    const sums = {};
+    CONFIG.scales.forEach(s => { sums[s.id] = 0; });
+    Q.forEach((q, i) => {
+      const pick = answers[i];
+      if (pick === null || pick === undefined) return;
+      sums[q.scale] += q.options[pick].w;
+    });
+    return CONFIG.scales
+      .map(s => {
+        const pct = Math.round(sums[s.id] / MAX_SCORE * 100);
+        return { scale: s, pct: pct, band: bandFor(s, pct) };
+      })
+      .sort((a, b) => b.pct - a.pct || a.scale.name.localeCompare(b.scale.name, 'ru'));
+  }
+
+  /* ---------- анимация подмены содержимого -------------------------------
+     dir: 1 — вперёд, -1 — назад. Обновление контента происходит в момент,
+     когда старое уже скрыто, поэтому мигания нет.
+     ----------------------------------------------------------------------- */
+
+  function swap(el, dir, update, done) {
+    if (reduced()) { update(); if (done) done(); return; }
+    const outCls = dir > 0 ? 'x-out-f' : 'x-out-b';
+    const inCls  = dir > 0 ? 'x-in-f'  : 'x-in-b';
+
+    el.dataset.anim = 'exit';
+    el.classList.add(outCls);
+
+    setTimeout(function () {
+      update();
+      el.classList.remove(outCls);
+      el.dataset.anim = 'enter';
+      el.classList.add(inCls);
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          el.classList.remove(inCls);
+          setTimeout(function () {
+            delete el.dataset.anim;
+            if (done) done();
+          }, T_ENTER);
+        });
+      });
+    }, T_EXIT);
+  }
+
+  /* ---------- смена экрана ------------------------------------------------ */
+
+  const SCREEN_TITLES = {
+    's-intro':   () => CONFIG.intro.title,
+    's-quiz':    () => CONFIG.quiz.counter
+                        .replace('{n}', state.index + 1)
+                        .replace('{total}', TOTAL),
+    's-loading': () => CONFIG.loading.steps[0].label,
+    's-results': () => state.shared ? CONFIG.results.sharedTitle : CONFIG.results.title,
+    's-final':   () => CONFIG.final.title
+  };
+
+  function announce(text) { $('live').textContent = text; }
+
+  function focusHeading(screenId) {
+    const sec = $(screenId);
+    const h = sec.querySelector('[tabindex="-1"]');
+    if (h) h.focus({ preventScroll: true });
+  }
+
+  function showScreen(id, dir, after) {
+    if (state.busy || state.screen === id) return;
+    const stage = $('stage');
+    const from = state.screen;
+    state.busy = true;
+
+    swap(stage, dir, function () {
+      $(from).hidden = true;
+      $(id).hidden = false;
+      state.screen = id;
+      if (after) after();
+      window.scrollTo(0, 0);
+      focusHeading(id);
+      announce(SCREEN_TITLES[id] ? SCREEN_TITLES[id]() : '');
+    }, function () {
+      state.busy = false;
+    });
+  }
+
+  /* ---------- отрисовка: интро ------------------------------------------- */
+
+  function renderIntro() {
+    $('wordmark').textContent = CONFIG.brand;
+    $('intro-eyebrow').textContent = CONFIG.intro.eyebrow;
+    $('intro-title').textContent = CONFIG.intro.title;
+    $('intro-lede').textContent = CONFIG.intro.lede;
+    $('intro-facts').textContent = CONFIG.intro.facts;
+    $('btnStart').textContent = CONFIG.intro.start;
+    $('intro-list-title').textContent = CONFIG.intro.listTitle;
+
+    // Если тест уже начат — предлагаем вернуться к первому неотвеченному вопросу.
+    const answered = state.answers.filter(v => v !== null).length;
+    const resume = $('btnResume');
+    if (answered > 0 && answered < TOTAL) {
+      resume.hidden = false;
+      resume.dataset.index = String(firstUnanswered());
+      resume.textContent = CONFIG.intro.resume + ' с вопроса ' + (firstUnanswered() + 1);
+      $('btnStart').textContent = CONFIG.final.restart;
+    } else {
+      resume.hidden = true;
+      $('btnStart').textContent = CONFIG.intro.start;
+    }
+
+    const ul = $('introScales');
+    ul.textContent = '';
+    CONFIG.scales.forEach((s, i) => {
+      const li = document.createElement('li');
+      const n = document.createElement('span');
+      n.className = 'n';
+      n.textContent = String(i + 1).padStart(2, '0');
+      const t = document.createElement('span');
+      t.textContent = s.name;
+      li.append(n, t);
+      ul.append(li);
+    });
+
+    $('footDisclaimer').textContent = CONFIG.disclaimer;
+    $('footPrivacy').textContent = CONFIG.privacy;
+  }
+
+  /* ---------- отрисовка: квиз -------------------------------------------- */
+
+  function renderProgress() {
+    const done = state.index;                       // сколько уже позади
+    $('qCounter').textContent = CONFIG.quiz.counter
+      .replace('{n}', state.index + 1)
+      .replace('{total}', TOTAL);
+    $('qPct').textContent = Math.round(done / TOTAL * 100) + '%';
+
+    const ruler = $('ruler');
+    ruler.setAttribute('aria-valuemax', String(TOTAL));
+    ruler.setAttribute('aria-valuenow', String(done));
+    ruler.setAttribute('aria-label', CONFIG.quiz.progressLabel);
+    ruler.setAttribute('aria-valuetext', CONFIG.quiz.counter
+      .replace('{n}', state.index + 1)
+      .replace('{total}', TOTAL));
+    $('rulerFill').style.transform = 'scaleX(' + (done / TOTAL) + ')';
+  }
+
+  function renderQuestion() {
+    const q = Q[state.index];
+    $('q-title').textContent = q.text;
+    $('qHint').textContent = CONFIG.quiz.hint;
+    $('btnBack').textContent = CONFIG.quiz.back;
+
+    const ul = $('qOpts');
+    ul.textContent = '';
+    q.options.forEach((opt, i) => {
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt';
+      b.dataset.i = String(i);
+      if (state.answers[state.index] === i) b.classList.add('is-picked');
+
+      const k = document.createElement('span');
+      k.className = 'k';
+      k.setAttribute('aria-hidden', 'true');
+      k.textContent = String(i + 1);
+
+      const t = document.createElement('span');
+      t.className = 't';
+      t.textContent = opt.t;
+
+      b.append(k, t);
+      b.addEventListener('click', () => pick(i));
+      li.append(b);
+      ul.append(li);
+    });
+  }
+
+  function pick(i) {
+    if (state.busy) return;
+    state.answers[state.index] = i;
+    save();
+
+    const btn = $('qOpts').querySelector('[data-i="' + i + '"]');
+    if (btn) {
+      $('qOpts').querySelectorAll('.opt').forEach(b => b.classList.remove('is-picked'));
+      btn.classList.add('is-picked');
+    }
+
+    const delay = reduced() ? 0 : 110;
+    setTimeout(next, delay);
+  }
+
+  function next() {
+    if (state.index < TOTAL - 1) {
+      goToQuestion(state.index + 1, 1);
+    } else {
+      state.index = TOTAL;         // все ответы собраны
+      save();
+      startLoading();
+    }
+  }
+
+  function goToQuestion(idx, dir) {
+    if (state.busy) return;
+    state.busy = true;
+    state.index = idx;
+    save();
+    renderProgress();
+    swap($('quizBody'), dir, function () {
+      renderQuestion();
+      announce(CONFIG.quiz.counter
+        .replace('{n}', state.index + 1)
+        .replace('{total}', TOTAL) + '. ' + Q[state.index].text);
+      $('q-title').focus({ preventScroll: true });
+    }, function () {
+      state.busy = false;
+    });
+  }
+
+  function back() {
+    if (state.busy) return;
+    if (state.index === 0) {
+      showScreen('s-intro', -1, renderIntro);
+    } else {
+      goToQuestion(state.index - 1, -1);
+    }
+  }
+
+  function startQuiz(fromIndex) {
+    state.index = Math.min(Math.max(fromIndex | 0, 0), TOTAL - 1);
+    showScreen('s-quiz', 1, function () {
+      renderProgress();
+      renderQuestion();
+    });
+  }
+
+  /* ---------- отрисовка: загрузка ----------------------------------------- */
+
+  let loadRaf = 0;
+
+  function startLoading() {
+    showScreen('s-loading', 1, function () {
+      $('loadNote').textContent = CONFIG.loading.note;
+      runLoading();
+    });
+  }
+
+  function runLoading() {
+    const steps = CONFIG.loading.steps;
+    const dur = reduced() ? 700 : CONFIG.loading.durationMs;
+    const label = $('loadLabel');
+    const fill = $('loadFill');
+    const bar = $('loadBar');
+    const pct = $('loadPct');
+    const stepEl = $('loadStep');
+    let stepIdx = -1;
+    const t0 = performance.now();
+
+    function setStep(i) {
+      if (i === stepIdx) return;
+      const first = stepIdx === -1;
+      stepIdx = i;
+      stepEl.textContent = CONFIG.loading.stepCounter
+        .replace('{n}', i + 1).replace('{total}', steps.length);
+      // первая подпись появляется вместе с экраном, без задержки на переход
+      if (reduced() || first) { label.textContent = steps[i].label; return; }
+      // старая подпись уходит вверх, новая приходит снизу
+      label.classList.add('is-out');
+      setTimeout(function () {
+        label.textContent = steps[i].label;
+        label.classList.remove('is-out');
+        label.classList.add('is-in');
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { label.classList.remove('is-in'); });
+        });
+      }, 130);
+    }
+
+    function frame(now) {
+      const p = Math.min((now - t0) / dur, 1);
+      // лёгкое замедление к концу — прогресс не выглядит машинным
+      const eased = 1 - Math.pow(1 - p, 1.6);
+      fill.style.transform = 'scaleX(' + eased + ')';
+      const shown = Math.round(eased * 100);
+      pct.textContent = shown + '%';
+      bar.setAttribute('aria-valuenow', String(shown));
+
+      let want = 0;
+      for (let i = 0; i < steps.length; i++) if (p >= steps[i].at) want = i;
+      setStep(want);
+
+      if (p < 1) { loadRaf = requestAnimationFrame(frame); }
+      else { loadRaf = 0; setTimeout(showResults, 320); }
+    }
+
+    fill.style.transform = 'scaleX(0)';
+    setStep(0);
+    loadRaf = requestAnimationFrame(frame);
+  }
+
+  function stopLoading() {
+    if (loadRaf) { cancelAnimationFrame(loadRaf); loadRaf = 0; }
+  }
+
+  /* ---------- отрисовка: результаты --------------------------------------- */
+
+  function countUp(el, to, delay) {
+    if (reduced()) { el.textContent = to + '%'; return; }
+    const dur = 640;
+    let t0 = 0;
+    setTimeout(function () {
+      function step(now) {
+        if (!t0) t0 = now;
+        const p = Math.min((now - t0) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(to * eased) + '%';
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }, delay);
+  }
+
+  function renderResults(rows) {
+    $('res-title').textContent = state.shared
+      ? CONFIG.results.sharedTitle : CONFIG.results.title;
+    $('res-lede').textContent = state.shared
+      ? CONFIG.results.sharedLede : CONFIG.results.lede;
+    $('res-disclaimer').textContent = CONFIG.disclaimer;
+    $('btnNext').textContent = state.shared
+      ? CONFIG.results.ownRun : CONFIG.results.next;
+    $('btnShare').textContent = CONFIG.results.shareBtn;
+
+    const ul = $('resScales');
+    ul.textContent = '';
+    const fills = [];
+
+    rows.forEach(function (r, i) {
+      const li = document.createElement('li');
+      li.className = 'scale';
+
+      const head = document.createElement('div');
+      head.className = 'scale__head';
+      const h2 = document.createElement('h2');
+      h2.className = 'scale__name';
+      h2.textContent = r.scale.name;
+      const pct = document.createElement('span');
+      pct.className = 'scale__pct';
+      pct.textContent = reduced() ? r.pct + '%' : '0%';
+      head.append(h2, pct);
+
+      const gauge = document.createElement('div');
+      gauge.className = 'gauge';
+      gauge.setAttribute('aria-hidden', 'true');   // число уже есть текстом рядом
+      const fill = document.createElement('div');
+      fill.className = 'gauge__fill';
+      const ticks = document.createElement('div');
+      ticks.className = 'gauge__ticks';
+      gauge.append(fill, ticks);
+
+      const band = document.createElement('p');
+      band.className = 'scale__band';
+      const b = document.createElement('b');
+      b.textContent = r.band.title;
+      band.append(b, document.createTextNode(r.band.text));
+
+      li.append(head, gauge, band);
+      ul.append(li);
+      fills.push({ fill: fill, pct: pct, value: r.pct, i: i });
+    });
+
+    // стаггер 35мс × 7 = 245мс суммарно
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        fills.forEach(function (f) {
+          const delay = f.i * 35;
+          f.fill.style.transitionDelay = delay + 'ms';
+          f.fill.style.transform = 'scaleX(' + (f.value / 100) + ')';
+          countUp(f.pct, f.value, delay);
+        });
+      });
+    });
+  }
+
+  function showResults() {
+    const rows = score(state.answers);
+    if (!state.shared) writeHash(state.answers);
+    showScreen('s-results', 1, function () { renderResults(rows); });
+  }
+
+  /* ---------- поделиться --------------------------------------------------- */
+
+  function shareLink() {
+    const url = window.location.href;
+    const input = $('shareUrl');
+    const btn = $('btnShare');
+
+    function fallback() {
+      input.hidden = false;
+      input.value = url;
+      input.select();
+      $('live').textContent = CONFIG.results.shareFallback;
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(function () {
+        btn.textContent = CONFIG.results.shareDone;
+        announce(CONFIG.results.shareDone);
+        setTimeout(function () { btn.textContent = CONFIG.results.shareBtn; }, 2200);
+      }).catch(fallback);
+    } else {
+      fallback();
+    }
+  }
+
+  /* ---------- отрисовка: финал --------------------------------------------- */
+
+  function renderFinal() {
+    $('fin-title').textContent = CONFIG.final.title;
+    $('fin-lede').textContent = CONFIG.final.lede;
+
+    const ol = $('finSteps');
+    ol.textContent = '';
+    CONFIG.final.steps.forEach(function (s, i) {
+      const li = document.createElement('li');
+      const n = document.createElement('span');
+      n.className = 'n';
+      n.textContent = String(i + 1).padStart(2, '0');
+      const p = document.createElement('p');
+      p.textContent = s;
+      li.append(n, p);
+      ol.append(li);
+    });
+
+    const cta = $('btnCta');
+    cta.textContent = CONFIG.cta.label;
+    cta.href = CONFIG.cta.href || '#';
+    const isPlaceholder = !CONFIG.cta.href || CONFIG.cta.href === '#';
+    $('ctaNote').hidden = !isPlaceholder;
+    $('ctaNote').textContent = CONFIG.cta.placeholderNote;
+    // пока ссылка — заглушка, честно сообщаем об этом и вспомогательным технологиям
+    if (isPlaceholder) {
+      cta.setAttribute('aria-disabled', 'true');
+      cta.setAttribute('aria-describedby', 'ctaNote');
+    } else {
+      cta.removeAttribute('aria-disabled');
+      cta.removeAttribute('aria-describedby');
+    }
+
+    $('btnRestart').textContent = CONFIG.final.restart;
+    $('btnRestart').classList.remove('is-armed');
+    restartArmedUntil = 0;
+  }
+
+  /* «Пройти заново» стирает ответы безвозвратно, поэтому просим подтверждение
+     вторым кликом — без модального окна. */
+  let restartArmedUntil = 0;
+
+  function onRestartClick() {
+    const btn = $('btnRestart');
+    if (Date.now() < restartArmedUntil) {
+      restartArmedUntil = 0;
+      btn.classList.remove('is-armed');
+      restart();
+      return;
+    }
+    restartArmedUntil = Date.now() + 4000;
+    btn.textContent = CONFIG.final.restartConfirm;
+    btn.classList.add('is-armed');
+    announce(CONFIG.final.restartConfirm);
+    setTimeout(function () {
+      if (!restartArmedUntil) return;
+      restartArmedUntil = 0;
+      btn.textContent = CONFIG.final.restart;
+      btn.classList.remove('is-armed');
+    }, 4000);
+  }
+
+  /* Уход с чужого результата. Свой сохранённый прогресс НЕ трогаем:
+     человек мог открыть ссылку друга посреди собственного теста. */
+  function leaveSharedResult() {
+    stopLoading();
+    try { history.replaceState(null, '', window.location.pathname + window.location.search); }
+    catch (e) { window.location.hash = ''; }
+    state.shared = false;
+    const saved = load();
+    state.answers = saved ? saved.answers : new Array(TOTAL).fill(null);
+    state.index = saved ? Math.min(saved.index | 0, TOTAL - 1) : 0;
+    showScreen('s-intro', -1, renderIntro);
+  }
+
+  function restart() {
+    stopLoading();
+    clearStore();
+    state.answers = new Array(TOTAL).fill(null);
+    state.index = 0;
+    state.shared = false;
+    try { history.replaceState(null, '', window.location.pathname + window.location.search); }
+    catch (e) { window.location.hash = ''; }
+    showScreen('s-intro', -1, renderIntro);
+  }
+
+  /* ---------- клавиатура ---------------------------------------------------- */
+
+  document.addEventListener('keydown', function (e) {
+    if (state.screen !== 's-quiz') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+
+    if (e.key >= '1' && e.key <= '4') {
+      const i = Number(e.key) - 1;
+      if (i < Q[state.index].options.length) { e.preventDefault(); pick(i); }
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault(); back();
+    }
+  });
+
+  /* ---------- запуск --------------------------------------------------------- */
+
+  function boot() {
+    renderIntro();
+    renderFinal();
+
+    $('btnStart').addEventListener('click', function () {
+      // на интро с недопройденным тестом эта кнопка означает «пройти заново»
+      if (state.answers.some(v => v !== null)) {
+        clearStore();
+        state.answers = new Array(TOTAL).fill(null);
+      }
+      startQuiz(0);
+    });
+    $('btnResume').addEventListener('click', function () {
+      startQuiz(Number($('btnResume').dataset.index || 0));
+    });
+    $('btnBack').addEventListener('click', back);
+    $('btnRestart').addEventListener('click', onRestartClick);
+    $('btnShare').addEventListener('click', shareLink);
+    $('btnNext').addEventListener('click', function () {
+      if (state.shared) { leaveSharedResult(); return; }
+      showScreen('s-final', 1, renderFinal);
+    });
+    $('btnCta').addEventListener('click', function (e) {
+      if (!CONFIG.cta.href || CONFIG.cta.href === '#') e.preventDefault();
+    });
+
+    // 1. Результат по ссылке — показываем сразу, локальный прогресс не трогаем.
+    const shared = readHash();
+    if (shared) {
+      state.shared = true;
+      state.answers = shared;
+      $('s-results').hidden = false;
+      state.screen = 's-results';
+      renderResults(score(shared));
+      announce(CONFIG.results.sharedTitle);
+      return;
+    }
+
+    // 2. Сохранённый прогресс — возвращаемся на тот же вопрос.
+    const saved = load();
+    if (saved) {
+      state.answers = saved.answers;
+      const answered = saved.answers.filter(v => v !== null).length;
+      if (answered === TOTAL) {
+        state.index = TOTAL;
+        $('s-results').hidden = false;
+        state.screen = 's-results';
+        renderResults(score(state.answers));
+        writeHash(state.answers);
+        announce(CONFIG.results.title);
+        return;
+      }
+      if (answered > 0) {
+        state.index = Math.min(saved.index | 0, TOTAL - 1);
+        $('s-quiz').hidden = false;
+        state.screen = 's-quiz';
+        renderProgress();
+        renderQuestion();
+        announce(CONFIG.quiz.counter
+          .replace('{n}', state.index + 1)
+          .replace('{total}', TOTAL));
+        return;
+      }
+    }
+
+    // 3. Чистый старт.
+    $('s-intro').hidden = false;
+    state.screen = 's-intro';
+  }
+
+  window.addEventListener('hashchange', function () {
+    const shared = readHash();
+    if (!shared) return;
+    if (state.shared && state.screen === 's-results') return;
+    state.shared = true;
+    state.answers = shared;
+    stopLoading();
+    showScreen('s-results', 1, function () { renderResults(score(shared)); });
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>
