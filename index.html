@@ -842,7 +842,23 @@ const CONFIG = {
      ------------------------------------------------------------------------ */
   consult: {
     title: 'Если хотите разобраться быстрее',
-    lead: 'Ниже всего у вас {weak}. С этого обычно и начинают.',
+
+    /* Первая строка зависит от того, сколько шкал делят минимум. Ничья внизу
+       случается примерно в трети прохождений: максимум по шкале 9 баллов, то
+       есть возможных процентов всего десять, а шкал семь — совпадения
+       неизбежны. Поэтому текстов три.
+
+       {weak}  — шкала (или несколько) с процентом
+       {count} — сколько шкал идут вровень, словами
+       {pct}   — их процент
+       Подставленные значения выделяются акцентом автоматически. */
+    lead: {
+      one:  'Ниже всего у вас {weak}. С этого обычно и начинают.',
+      few:  'Ниже всего у вас {weak}. Начинать стоит с одной из них.',
+      many: 'Одной проседающей шкалы у вас нет: {count} идут вровень — по {pct}. ' +
+            'Когда шкалы держатся на одном уровне, дело обычно не в отдельной привычке.',
+      manyFrom: 4   /* с этого числа шкал в ничьей включается many */
+    },
     body: [
       'Тест показал, где буксует. Почему — он не покажет. Шкалы называют привычку, но не причину: почему вы тянете именно эти задачи, почему не получается отдать работу, почему вечер уходит на догон. Причина обычно не в дисциплине — поэтому советы вроде «просто начни планировать» и не срабатывают.',
       'На консультации разбираем это вместе: где именно спотыкаетесь и что нужно поменять внутри, чтобы снаружи получился другой результат.'
@@ -1921,9 +1937,39 @@ const CONFIG = {
     renderConsult();
   }
 
-  /* Приглашение на консультацию. Персональная строка показывается только
-     тогда, когда шкалы действительно различаются: если все проценты равны,
-     «ниже всего у вас…» ничего не значит. */
+  /* «восстановление, границы и планирование» — с «и» перед последним */
+  function joinRu(list) {
+    if (list.length <= 1) return list[0] || '';
+    return list.slice(0, -1).join(', ') + ' и ' + list[list.length - 1];
+  }
+
+  /* «четыре шкалы», «пять шкал» — числительное словом и верная форма слова */
+  const NUM_RU = { 2: 'две', 3: 'три', 4: 'четыре', 5: 'пять', 6: 'шесть', 7: 'семь' };
+  function countScales(n) {
+    const last = n % 10, teen = n % 100 >= 11 && n % 100 <= 14;
+    const noun = (!teen && last >= 2 && last <= 4) ? 'шкалы' : 'шкал';
+    return (NUM_RU[n] || String(n)) + ' ' + noun;
+  }
+
+  /* Подставляет значения в шаблон и выделяет их акцентом. Незнакомые
+     плейсхолдеры остаются текстом — чтобы опечатку в CONFIG было видно. */
+  function fillTemplate(el, template, values) {
+    el.textContent = '';
+    String(template).split(/(\{\w+\})/).forEach(function (part) {
+      const m = /^\{(\w+)\}$/.exec(part);
+      if (m && Object.prototype.hasOwnProperty.call(values, m[1])) {
+        const b = document.createElement('b');
+        b.className = 'consult__mark';
+        b.textContent = values[m[1]];
+        el.append(b);
+      } else if (part) {
+        el.append(document.createTextNode(part));
+      }
+    });
+  }
+
+  /* Приглашение на консультацию. Первая строка подстраивается под то,
+     сколько шкал делят минимум: одна, несколько или толпа. */
   function renderConsult() {
     const c = CONFIG.consult || {};
     const box = $('consult');
@@ -1934,20 +1980,33 @@ const CONFIG = {
     const lead = $('consultLead');
     const rows = score(state.answers);
     const complete = state.answers.every(function (v) { return v !== null; });
-    const spread = rows.length > 1 && rows[0].pct > rows[rows.length - 1].pct;
+    const tpl = c.lead || {};
 
     lead.textContent = '';
-    if (c.lead && complete && spread) {
-      const weak = rows[rows.length - 1];
-      const parts = String(c.lead).split('{weak}');
-      const mark = document.createElement('b');
-      mark.className = 'consult__mark';
-      mark.textContent = weak.scale.name.toLocaleLowerCase('ru') + ' — ' + weak.pct + '%';
-      lead.append(document.createTextNode(parts[0] || ''), mark,
-                  document.createTextNode(parts[1] || ''));
-      lead.hidden = false;
-    } else {
-      lead.hidden = true;
+    lead.hidden = true;
+
+    if (complete && rows.length) {
+      const min = rows[rows.length - 1].pct;
+      const low = rows.filter(function (r) { return r.pct === min; });
+      const names = low.map(function (r) {
+        return r.scale.name.toLocaleLowerCase('ru');
+      });
+      const manyFrom = (tpl.manyFrom | 0) >= 2 ? (tpl.manyFrom | 0) : 4;
+
+      let text = '', values = null;
+      if (low.length === 1) {
+        text = tpl.one;
+        values = { weak: names[0] + ' — ' + min + '%' };
+      } else if (low.length < manyFrom) {
+        text = tpl.few;
+        values = { weak: joinRu(names) + ' — по ' + min + '%' };
+      } else {
+        // называть одну «самой низкой» было бы неправдой: их несколько
+        text = tpl.many;
+        values = { count: countScales(low.length), pct: min + '%' };
+      }
+
+      if (text) { fillTemplate(lead, text, values); lead.hidden = false; }
     }
 
     const body = $('consultBody');
