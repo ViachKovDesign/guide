@@ -600,6 +600,49 @@ h1:focus, h2:focus{ outline:none }   /* программный фокус на �
   font-family:var(--mono);
 }
 
+/* ---------- приглашение на консультацию --------------------------------- */
+
+.consult{
+  margin-top:var(--s12);
+  padding:var(--s6);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-top:2px solid var(--accent);   /* та же акцентная риска, что у шкал */
+  border-radius:var(--radius);
+}
+.consult__title{
+  font-size:clamp(1.25rem, 4.6vw, 1.5rem);
+  line-height:1.2;
+  letter-spacing:-.01em;
+  margin-bottom:var(--s3);
+}
+.consult__lead{
+  font-size:1.0625rem;
+  line-height:1.5;
+  margin-bottom:var(--s4);
+  max-width:40em;
+}
+.consult__mark{ color:var(--accent); font-weight:600 }
+.consult__para{
+  color:var(--muted);
+  font-size:.9375rem;
+  max-width:40em;
+}
+.consult__para + .consult__para{ margin-top:var(--s3) }
+.consult__cta{ margin-top:var(--s6); width:100% }
+@media (min-width:480px){
+  .consult__cta{ width:auto }
+}
+.consult__person{
+  margin-top:var(--s4);
+  font-family:var(--mono);
+  font-size:.75rem;
+  letter-spacing:.06em;
+  color:var(--muted);
+}
+
+.final__nav{ margin-top:var(--s8) }
+
 /* ---------- подвал ------------------------------------------------------ */
 
 .site-foot .disclaimer{
@@ -784,6 +827,30 @@ const CONFIG = {
     restart: 'Пройти заново',
     restartConfirm: 'Нажмите ещё раз — ответы сотрутся',
     backToResults: 'Вернуться к результатам'
+  },
+
+  /* --- приглашение на консультацию ---------------------------------------
+     Блок на финальном экране. Чтобы убрать его целиком — очистите title.
+
+     В lead подставляется самая слабая шкала человека: {weak} превращается
+     в «восстановление — 22%». Строка показывается только если шкалы
+     реально различаются: когда все проценты равны, «ниже всего» — пустые
+     слова, и строка прячется сама.
+
+     credentials пустое намеренно: впишите себя сами, если хотите строку
+     вроде «психолог, работаю в КПТ-подходе».
+     ------------------------------------------------------------------------ */
+  consult: {
+    title: 'Если хотите разобраться быстрее',
+    lead: 'Ниже всего у вас {weak}. С этого обычно и начинают.',
+    body: [
+      'Тест показал, где буксует. Почему — он не покажет. Шкалы называют привычку, но не причину: почему вы тянете именно эти задачи, почему не получается отдать работу, почему вечер уходит на догон. Причина обычно не в дисциплине — поэтому советы вроде «просто начни планировать» и не срабатывают.',
+      'На консультации разбираем это вместе: где именно спотыкаетесь и что нужно поменять внутри, чтобы снаружи получился другой результат.'
+    ],
+    ctaLabel: 'Написать в Telegram',
+    ctaHref: 'https://t.me/Any_Kovalenko',
+    person: 'Аня Коваленко · @Any_Kovalenko',
+    credentials: ''
   },
 
   /* --- шкалы ------------------------------------------------------------
@@ -1116,8 +1183,18 @@ const CONFIG = {
         <h1 id="fin-title" tabindex="-1"></h1>
         <p class="lede" id="fin-lede"></p>
         <ol class="steps" id="finSteps"></ol>
-        <div class="btn-row">
-          <button class="btn" type="button" id="btnBackToResults"></button>
+
+        <section class="consult" id="consult" aria-labelledby="consult-title" hidden>
+          <h2 class="consult__title" id="consult-title"></h2>
+          <p class="consult__lead" id="consultLead" hidden></p>
+          <div class="consult__body" id="consultBody"></div>
+          <a class="btn consult__cta" id="btnConsult" href="#"
+             target="_blank" rel="noopener noreferrer"></a>
+          <p class="consult__person" id="consultPerson" hidden></p>
+        </section>
+
+        <div class="btn-row final__nav">
+          <button class="btn btn--ghost" type="button" id="btnBackToResults"></button>
           <button class="btn btn--quiet" type="button" id="btnRestart"></button>
         </div>
       </section>
@@ -1840,6 +1917,55 @@ const CONFIG = {
     $('btnRestart').textContent = CONFIG.final.restart;
     $('btnRestart').classList.remove('is-armed');
     restartArmedUntil = 0;
+
+    renderConsult();
+  }
+
+  /* Приглашение на консультацию. Персональная строка показывается только
+     тогда, когда шкалы действительно различаются: если все проценты равны,
+     «ниже всего у вас…» ничего не значит. */
+  function renderConsult() {
+    const c = CONFIG.consult || {};
+    const box = $('consult');
+    if (!c.title) { box.hidden = true; return; }
+    box.hidden = false;
+    $('consult-title').textContent = c.title;
+
+    const lead = $('consultLead');
+    const rows = score(state.answers);
+    const complete = state.answers.every(function (v) { return v !== null; });
+    const spread = rows.length > 1 && rows[0].pct > rows[rows.length - 1].pct;
+
+    lead.textContent = '';
+    if (c.lead && complete && spread) {
+      const weak = rows[rows.length - 1];
+      const parts = String(c.lead).split('{weak}');
+      const mark = document.createElement('b');
+      mark.className = 'consult__mark';
+      mark.textContent = weak.scale.name.toLocaleLowerCase('ru') + ' — ' + weak.pct + '%';
+      lead.append(document.createTextNode(parts[0] || ''), mark,
+                  document.createTextNode(parts[1] || ''));
+      lead.hidden = false;
+    } else {
+      lead.hidden = true;
+    }
+
+    const body = $('consultBody');
+    body.textContent = '';
+    (c.body || []).forEach(function (para) {
+      const p = document.createElement('p');
+      p.className = 'consult__para';
+      p.textContent = para;
+      body.append(p);
+    });
+
+    const cta = $('btnConsult');
+    cta.textContent = c.ctaLabel || '';
+    cta.href = c.ctaHref || '#';
+
+    const person = [c.person, c.credentials].filter(Boolean).join(' · ');
+    $('consultPerson').textContent = person;
+    $('consultPerson').hidden = !person;
   }
 
   /* «Пройти заново» стирает ответы безвозвратно, поэтому просим подтверждение
@@ -1930,6 +2056,7 @@ const CONFIG = {
     $('btnRestart').addEventListener('click', onRestartClick);
     $('btnShare').addEventListener('click', shareLink);
     $('btnCopyLink').addEventListener('click', copyLink);
+    $('btnConsult').addEventListener('click', function () { track('consult_click'); });
     $('btnNext').addEventListener('click', function () {
       if (state.shared) { leaveSharedResult(); return; }
       showScreen('s-final', 1, renderFinal);
