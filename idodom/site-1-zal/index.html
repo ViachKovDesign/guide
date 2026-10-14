@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IDODOM — мебель, интерьер и дизайн</title>
+<meta name="description" content="IDODOM — Home priority. Современная мебель, интерьер и дизайн: мягкая мебель, столы, стулья и кресла, фигуры.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%232A1D08%27/%3E%3Cpath d=%27M9 7h14v18H9z%27 fill=%27none%27 stroke=%27%23EAF4EE%27 stroke-width=%272%27/%3E%3C/svg%3E">
+<meta name="theme-color" content="#120C03">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/viewer.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">К содержимому</a>
+
+<!-- Шапка собирается в assets/js/common.js: слева разделы страницы, по центру логотип, справа категории -->
+<header id="hdr"></header>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__logo" data-logo="full"></div>
+  <p class="loader__txt"><span id="loaderPct">0</span>%<i></i>Готовим зал</p>
+</div>
+
+<main id="main">
+  <!-- 0. Первый экран -->
+  <section class="hero" id="top" data-tone="dark">
+    <div class="hero__copy">
+      <p class="eyebrow hero__eyebrow">IDODOM · Home priority</p>
+      <h1 class="hero__title" data-hero-title>
+        <span class="line"><span>Пространство,</span></span>
+        <span class="line"><span>которое говорит</span></span>
+        <span class="line"><span>о вас</span></span>
+      </h1>
+    </div>
+    <div class="hero__foot">
+      <p class="hero__sub">Современная мебель, интерьер и дизайн.</p>
+      <a class="btn" href="#catalog" data-go="catalog" data-magnetic><span>Смотреть каталог</span><i class="btn__arr"></i></a>
+      <p class="hero__hint" aria-hidden="true"><span>Прокрутите</span><i></i></p>
+    </div>
+  </section>
+
+  <!-- 1. Ракурсы: камера обходит диван, пока идёт прокрутка -->
+  <section class="views" id="views" data-tone="dark" aria-label="Ракурсы">
+    <div class="views__pin">
+      <div class="views__head">
+        <p class="eyebrow">Ракурсы</p>
+        <h2 class="views__title" aria-live="polite"><span class="mask"><span id="angleName">Фронт</span></span></h2>
+        <p class="views__text" id="angleText">Ровная линия спинки и пропорции модулей.</p>
+      </div>
+      <ol class="views__list" id="angleList">
+        <li><button type="button" data-angle="0"><b>01</b><span>Фронт</span></button></li>
+        <li><button type="button" data-angle="1"><b>02</b><span>Три четверти</span></button></li>
+        <li><button type="button" data-angle="2"><b>03</b><span>Сверху</span></button></li>
+        <li><button type="button" data-angle="3"><b>04</b><span>Деталь</span></button></li>
+      </ol>
+      <p class="views__sub">Диван «Дуга» <i></i> прокрутите, чтобы обойти его</p>
+      <div class="views__rail" aria-hidden="true"><i id="angleBar"></i></div>
+    </div>
+  </section>
+
+  <!-- 2. Видео: стол с мраморной столешницей раскрывается на весь экран -->
+  <section class="reel" id="reel" data-tone="dark" aria-label="Стол «Икс»">
+    <div class="reel__sticky">
+      <div class="reel__frame" id="reelFrame" data-cursor="Пауза">
+        <video id="reelVideo" muted loop playsinline preload="metadata" poster="../assets/img/table-marble-poster.jpg">
+          <source src="../assets/video/table-marble.mp4" type="video/mp4">
+        </video>
+        <div class="reel__shade"></div>
+      </div>
+      <div class="reel__copy">
+        <p class="eyebrow">Столы</p>
+        <h2 class="reel__title"><span class="mask"><span>Стол «Икс»</span></span></h2>
+        <p class="reel__text">Столешница из мрамора с золотой жилой на X-образном основании. Под светом рисунок камня меняется — как и сам стол.</p>
+        <a class="btn btn--ghost" href="#tables" data-go="tables"><span>Столы в каталоге</span><i class="btn__arr"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Разделы: камера летит вдоль зала от постамента к постаменту -->
+  <section class="flight" id="sections" data-tone="dark" aria-label="Разделы">
+    <div class="flight__pin">
+      <div class="flight__head"><p class="eyebrow">Разделы</p><p class="flight__count"><b id="flightNum">01</b><i></i>04</p></div>
+      <div class="flight__panels">
+        <article class="panel panel--l" id="soft" data-cat="soft">
+          <h2 class="panel__title">Мягкая<br>мебель</h2>
+          <p class="panel__text">Диваны, модули и пуфы с глубокой посадкой. Ткань и каркас подбираем под комнату.</p>
+          <a class="panel__more" href="#catalog" data-filter="soft"><span>Смотреть раздел</span><i class="btn__arr"></i></a>
+        </article>
+        <article class="panel panel--r" id="tables" data-cat="tables">
+          <h2 class="panel__title">Столы</h2>
+          <p class="panel__text">Обеденные, журнальные и рабочие. Мрамор, дуб и камень на лёгких основаниях.</p>
+          <a class="panel__more" href="#catalog" data-filter="tables"><span>Смотреть раздел</span><i class="btn__arr"></i></a>
+        </article>
+        <article class="panel panel--l" id="chairs" data-cat="chairs">
+          <h2 class="panel__title">Стулья<br>и кресла</h2>
+          <p class="panel__text">От обеденного стула до глубокого кресла. Дерево, ткань и кожа, спокойные формы.</p>
+          <a class="panel__more" href="#catalog" data-filter="chairs"><span>Смотреть раздел</span><i class="btn__arr"></i></a>
+        </article>
+        <article class="panel panel--r" id="figures" data-cat="figures">
+          <h2 class="panel__title">Фигуры</h2>
+          <p class="panel__text">Полигональная мебель: огранённые пуфы и скульптурные объёмы, которые работают как акцент.</p>
+          <a class="panel__more" href="#catalog" data-filter="figures"><span>Смотреть раздел</span><i class="btn__arr"></i></a>
+        </article>
+      </div>
+      <ul class="flight__dots" id="flightDots" aria-hidden="true"><li></li><li></li><li></li><li></li></ul>
+    </div>
+  </section>
+
+  <!-- 4. Каталог: лента карточек; клик — карточка разворачивается -->
+  <section class="catalog" id="catalog" data-tone="dark" aria-label="Каталог">
+    <div class="catalog__head">
+      <div>
+        <p class="eyebrow">Каталог</p>
+        <h2 class="catalog__title" data-words>Выбирайте по разделу</h2>
+      </div>
+      <div class="pills" role="group" aria-label="Фильтр по разделам" id="pills">
+        <button type="button" class="pill is-on" data-f="all">Все</button>
+        <button type="button" class="pill" data-f="soft">Мягкая мебель</button>
+        <button type="button" class="pill" data-f="tables">Столы</button>
+        <button type="button" class="pill" data-f="chairs">Стулья и кресла</button>
+        <button type="button" class="pill" data-f="figures">Фигуры</button>
+      </div>
+    </div>
+    <div class="track" id="track" tabindex="0" aria-label="Лента товаров, листайте горизонтально"></div>
+    <div class="catalog__foot">
+      <div class="catalog__bar" aria-hidden="true"><i id="trackBar"></i></div>
+      <p class="catalog__hint">Тяните ленту или нажмите на карточку — она развернётся</p>
+      <div class="catalog__arrows">
+        <button type="button" id="trackPrev" aria-label="Назад"><i class="btn__arr" style="transform:scaleX(-1)"></i></button>
+        <button type="button" id="trackNext" aria-label="Вперёд"><i class="btn__arr"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. О нас: светлый экран -->
+  <section class="about" id="about" data-tone="light">
+    <p class="eyebrow">О нас</p>
+    <p class="about__lead" id="aboutLead">IDODOM — это мебель, интерьер и дизайн в одном месте. Мы начинаем с чертежа и заканчиваем вещью, в которой хочется жить.</p>
+    <ul class="about__cols">
+      <li><b>1/</b><h3>Чертёж</h3><p>Сначала размеры и пропорции, потом ткань и цвет. Каждую вещь рисуем под конкретную комнату.</p></li>
+      <li><b>2/</b><h3>Материал</h3><p>Мрамор, дерево, плотные ткани: то, что хорошо стареет и не требует оправданий.</p></li>
+      <li><b>3/</b><h3>Дом</h3><p>Мебель, которая подчиняется пространству, а не наоборот. Home priority — дом на первом месте.</p></li>
+    </ul>
+  </section>
+
+  <!-- 6. Контакты -->
+  <section class="contacts" id="contacts" data-tone="dark">
+    <div class="contacts__logo" data-logo="full" aria-hidden="true"></div>
+    <div class="contacts__grid">
+      <div>
+        <p class="eyebrow">Контакты</p>
+        <h2 class="contacts__title" data-words>Расскажите о вашем пространстве</h2>
+        <ul class="contacts__list">
+          <li><span>Телефон</span><a href="tel:+70000000000">+7 (000) 000-00-00</a></li>
+          <li><span>Почта</span><a href="mailto:hello@idodom.example">hello@idodom.example</a></li>
+          <li><span>Шоурум</span><em>Адрес — по записи</em></li>
+        </ul>
+      </div>
+      <form class="form" data-form novalidate>
+        <label class="field"><span>Имя</span><input name="name" type="text" autocomplete="name" required></label>
+        <label class="field"><span>Телефон или e-mail</span><input name="contact" type="text" autocomplete="tel" required></label>
+        <fieldset class="chips"><legend>Что обставляем</legend>
+          <label><input type="radio" name="topic" value="soft" checked><span>Мягкая мебель</span></label>
+          <label><input type="radio" name="topic" value="tables"><span>Столы</span></label>
+          <label><input type="radio" name="topic" value="chairs"><span>Стулья и кресла</span></label>
+          <label><input type="radio" name="topic" value="figures"><span>Фигуры</span></label>
+          <label><input type="radio" name="topic" value="all"><span>Интерьер целиком</span></label>
+        </fieldset>
+        <label class="field"><span>Пара слов о проекте</span><textarea name="msg" rows="3"></textarea></label>
+        <button class="btn" type="submit" data-magnetic><span>Отправить заявку</span><i class="btn__arr"></i></button>
+        <p class="form__status" data-form-status role="status"></p>
+      </form>
+    </div>
+    <footer class="foot">
+      <span>© 2026 IDODOM · Home priority</span>
+      <a href="#top" data-go="top">Наверх ↑</a>
+    </footer>
+  </section>
+</main>
+
+<div class="grain" aria-hidden="true"></div>
+
+<script src="../assets/vendor/three.bundle.min.js"></script>
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../assets/vendor/Flip.min.js"></script>
+<script src="../assets/vendor/lenis.min.js"></script>
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/products.js"></script>
+<script src="../assets/js/viewer.js"></script>
+<script src="../assets/js/furniture.js"></script>
+<script src="scene.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

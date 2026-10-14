@@ -1,0 +1,19 @@
+{
+  "name": "idodom-site-2-chertezh",
+  "private": true,
+  "version": "1.0.0",
+  "description": "IDODOM — сайт 2 «Чертёж»: бесконечная мозаика, переходы между страницами (React + framer-motion + Lenis)",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch"
+  },
+  "dependencies": {
+    "framer-motion": "11.18.2",
+    "lenis": "1.1.20",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.2"
+  }
+}

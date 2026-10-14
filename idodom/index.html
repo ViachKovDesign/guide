@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDODOM — два сайта на выбор</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%232A1D08%27/%3E%3Cpath d=%27M9 7h14v18H9z%27 fill=%27none%27 stroke=%27%23EAF4EE%27 stroke-width=%272%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/base.css">
+<style>
+  :root{--bg:var(--ink-950);--fg:var(--bone)}
+  body{min-height:100vh;display:flex;flex-direction:column}
+  .hub{flex:1;padding:clamp(28px,5vw,64px) var(--gut) 40px;max-width:1500px;width:100%;margin:0 auto}
+  .hub__logo{width:min(300px,60vw);margin:0 auto clamp(32px,6vh,64px);--logo-sw:1.2px}
+  h1{font-family:var(--f-display);font-weight:300;text-transform:uppercase;font-size:clamp(30px,4.4vw,64px);line-height:1.04;text-align:center;margin-bottom:12px}
+  .hub__lead{text-align:center;color:rgba(234,244,238,.65);max-width:60ch;margin:0 auto clamp(30px,6vh,60px)}
+  .hub__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,28px)}
+  .opt{display:flex;flex-direction:column;background:var(--ink-900);border-radius:6px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(234,244,238,.14);transition:box-shadow .4s}
+  .opt:hover{box-shadow:inset 0 0 0 1px var(--cognac)}
+  .opt__img{position:relative;aspect-ratio:16/9;overflow:hidden;background:#000}
+  .opt__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .7s var(--ease),transform 1.2s var(--ease)}
+  .opt__img img+img{opacity:0}
+  .opt:hover .opt__img img:first-child{opacity:0;transform:scale(1.04)}
+  .opt:hover .opt__img img+img{opacity:1;transform:scale(1.04)}
+  .opt__body{padding:clamp(20px,2.4vw,32px);display:flex;flex-direction:column;gap:14px;flex:1}
+  .opt__tag{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--cognac)}
+  .opt h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3vw,42px);text-transform:uppercase;line-height:1.05}
+  .opt p{color:rgba(234,244,238,.72);font-size:15px;line-height:1.6}
+  .opt ul{display:flex;flex-wrap:wrap;gap:6px}
+  .opt li{padding:6px 12px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(234,244,238,.2);font-size:12px;color:rgba(234,244,238,.8)}
+  .opt .btn{margin-top:auto;align-self:flex-start}
+  .hub__foot{margin-top:clamp(30px,6vh,60px);padding-top:20px;border-top:1px solid rgba(234,244,238,.14);color:rgba(234,244,238,.55);font-size:13px;line-height:1.6;display:grid;gap:6px}
+  @media (max-width:820px){.hub__grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="hub">
+  <svg class="logo hub__logo" viewBox="0 0 777 251" role="img" aria-label="IDODOM — Home priority">
+    <path class="logo__frame" d="M176 227H8V52H769V227H601"/>
+    <text class="logo__word" x="388.5" y="185" text-anchor="middle" font-size="218" textLength="584" lengthAdjust="spacingAndGlyphs">IDODOM</text>
+    <text class="logo__tag" x="388.5" y="243" text-anchor="middle" font-size="42" textLength="290" lengthAdjust="spacing">HOME PRIORITY</text>
+  </svg>
+  <h1>Два сайта — два характера</h1>
+  <p class="hub__lead">Оба построены на ваших исходниках: логотип IDODOM по центру меню, слева — ракурсы, разделы, о нас, контакты, справа — мягкая мебель, столы, стулья и кресла, фигуры. Откройте и сравните.</p>
+
+  <div class="hub__grid">
+    <article class="opt">
+      <div class="opt__img"><img src="previews/site-1-hero.jpg" alt="Сайт 1: тёмный зал с диваном на постаменте"><img src="previews/site-1-flight.jpg" alt="Сайт 1: раздел «Фигуры»" loading="lazy"></div>
+      <div class="opt__body">
+        <span class="opt__tag">Сайт 1 · тёмный</span>
+        <h2>Зал</h2>
+        <p>Кинозал на эспрессо и крем: камера летит по залу от постамента к постаменту, пока вы листаете. Видео мраморного стола раскрывается на весь экран, каталог разворачивается карточками.</p>
+        <ul><li>3D-сцена WebGL</li><li>Ракурсы по скроллу</li><li>Видео-раскрытие</li><li>Карточки-разворот</li></ul>
+        <a class="btn" href="site-1-zal/index.html"><span>Открыть сайт 1</span><i class="btn__arr"></i></a>
+      </div>
+    </article>
+    <article class="opt">
+      <div class="opt__img"><img src="previews/site-2-home.jpg" alt="Сайт 2: светлая мозаика на разбивочной сетке"><img src="previews/site-2-case.jpg" alt="Сайт 2: страница проекта с бегущим заголовком" loading="lazy"></div>
+      <div class="opt__body">
+        <span class="opt__tag">Сайт 2 · светлый + тёмный</span>
+        <h2>Чертёж</h2>
+        <p>Светлая бумага и разбивочная сетка с осями. Бесконечная мозаика на «рельсе» (механика bybang): клик по кадру — страница уходит в размытие, открывается проект с гигантской бегущей строкой.</p>
+        <ul><li>React + framer-motion</li><li>Lenis, без GSAP</li><li>Пересборка по фильтру</li><li>Переходы между страницами</li></ul>
+        <a class="btn" href="site-2-chertezh/index.html"><span>Открыть сайт 2</span><i class="btn__arr"></i></a>
+      </div>
+    </article>
+  </div>
+
+  <div class="hub__foot">
+    <span>Лучше открывать в Chrome: двойной клик по файлу работает без сервера. Для телефона — тот же адрес в браузере.</span>
+    <span>Названия, размеры и описания товаров, телефон и почта — рабочие заготовки. Картинки мебели нарисованы кодом (папка <code>tools</code>), на их место встанут настоящие фото.</span>
+  </div>
+</main>
+</body>
+</html>
