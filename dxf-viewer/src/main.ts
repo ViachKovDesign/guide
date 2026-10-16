@@ -171,12 +171,26 @@ async function openFile(file: File) {
   await openBuffer(buf, file.name);
 }
 
+/** Примеры лежат рядом со страницей. В превью-сборке (VITE_SAMPLES_JSON) — одним JSON в base64. */
+async function fetchSample(name: string): Promise<ArrayBuffer> {
+  if (import.meta.env.VITE_SAMPLES_JSON) {
+    const res = await fetch('./samples.json');
+    if (!res.ok) throw new Error(String(res.status));
+    const map = (await res.json()) as Record<string, string>;
+    const bin = atob(map[name]);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes.buffer;
+  }
+  const res = await fetch(`./samples/${name}`);
+  if (!res.ok) throw new Error(String(res.status));
+  return res.arrayBuffer();
+}
+
 async function openSample(name: string) {
   setBusy(true, 'Загружаю пример…');
   try {
-    const res = await fetch(`./samples/${name}`);
-    if (!res.ok) throw new Error(String(res.status));
-    const buf = await res.arrayBuffer();
+    const buf = await fetchSample(name);
     stEnc.value = 'auto';
     await openBuffer(buf, name);
   } catch {
